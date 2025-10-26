@@ -25,7 +25,6 @@ export default function ImageUpload({ onImageUpload, currentImage }: ImageUpload
         maxSizeMB: 0.5, // 500 KB max
         maxWidthOrHeight: 1920,
         useWebWorker: true,
-        quality: 0.75, // 75% quality
       });
       return compressed;
     } catch (err) {
