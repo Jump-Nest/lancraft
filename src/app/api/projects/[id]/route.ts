@@ -1,10 +1,16 @@
 import { createClient } from '@supabase/supabase-js';
 import { NextRequest, NextResponse } from 'next/server';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+function getSupabaseClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-const supabase = createClient(supabaseUrl!, supabaseServiceKey!);
+  if (!supabaseUrl || !supabaseServiceKey) {
+    throw new Error('Chybí Supabase environment variables');
+  }
+
+  return createClient(supabaseUrl, supabaseServiceKey);
+}
 
 function checkAuth(request: NextRequest) {
   const token = request.headers.get('authorization')?.replace('Bearer ', '');
@@ -25,6 +31,7 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const supabase = getSupabaseClient();
     const { id } = await params;
     const { data, error } = await supabase
       .from('projects')
@@ -48,6 +55,7 @@ export async function PUT(
 ) {
   try {
     checkAuth(request);
+    const supabase = getSupabaseClient();
     const { id } = await params;
     const { title, description, image, category } = await request.json();
 
@@ -76,6 +84,7 @@ export async function DELETE(
 ) {
   try {
     checkAuth(request);
+    const supabase = getSupabaseClient();
     const { id } = await params;
 
     const { error } = await supabase.from('projects').delete().eq('id', id);

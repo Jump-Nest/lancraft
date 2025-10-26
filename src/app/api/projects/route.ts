@@ -1,13 +1,20 @@
 import { createClient } from '@supabase/supabase-js';
 import { NextRequest, NextResponse } from 'next/server';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+function getSupabaseClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-const supabase = createClient(supabaseUrl!, supabaseServiceKey!);
+  if (!supabaseUrl || !supabaseServiceKey) {
+    throw new Error('Chybí Supabase environment variables');
+  }
+
+  return createClient(supabaseUrl, supabaseServiceKey);
+}
 
 export async function GET() {
   try {
+    const supabase = getSupabaseClient();
     const { data, error } = await supabase
       .from('projects')
       .select('*')
@@ -44,6 +51,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Chybí požadovaná pole' }, { status: 400 });
     }
 
+    const supabase = getSupabaseClient();
     const { data, error } = await supabase
       .from('projects')
       .insert([{ title, description, image, category }])
