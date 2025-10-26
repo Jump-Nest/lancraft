@@ -31,12 +31,12 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #FF6B35;
+  background: #FACC15;
   border-radius: 5px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #ff5520;
+  background: #E5B800;
 }
 
 /* Smooth animations */
