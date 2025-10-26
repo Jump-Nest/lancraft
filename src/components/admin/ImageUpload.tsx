@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef } from 'react';
+import Image from 'next/image';
 import imageCompression from 'browser-image-compression';
 import { useAuth } from '@/lib/auth-context';
 import { FiUpload, FiX } from 'react-icons/fi';
@@ -97,10 +98,11 @@ export default function ImageUpload({ onImageUpload, currentImage }: ImageUpload
 
       {preview && (
         <div className="relative w-full h-32 sm:h-48 bg-zinc-800 rounded overflow-hidden border border-zinc-700">
-          <img
+          <Image
             src={preview}
             alt="Preview"
-            className="w-full h-full object-cover"
+            fill
+            className="object-cover"
           />
           <button
             type="button"
