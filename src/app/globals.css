@@ -1,0 +1,265 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Poppins:wght@300;400;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #000;
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #FF6B35;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #ff5520;
+}
+
+/* Smooth animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Utility classes */
+.gradient-text {
+  background: linear-gradient(135deg, #FF6B35 0%, #FFD700 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.glow-effect {
+  box-shadow: 0 0 20px rgba(255, 107, 53, 0.3);
+}
+
+.glow-effect:hover {
+  box-shadow: 0 0 40px rgba(255, 107, 53, 0.6);
+}
+
+/* Quill Editor Styling */
+.ql-container {
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  background-color: #27272a !important;
+  color: #fff !important;
+  border: none !important;
+}
+
+.ql-editor {
+  min-height: 200px;
+  color: #fff !important;
+  background-color: #27272a !important;
+}
+
+.ql-editor.ql-blank::before {
+  color: #71717a !important;
+}
+
+.ql-toolbar {
+  background-color: #3f3f46 !important;
+  border: none !important;
+  border-bottom: 1px solid #27272a !important;
+  border-radius: 4px 4px 0 0 !important;
+}
+
+.ql-toolbar button,
+.ql-toolbar button:hover,
+.ql-toolbar button.ql-active,
+.ql-toolbar .ql-picker-label {
+  color: #fff !important;
+}
+
+.ql-toolbar button:hover,
+.ql-toolbar button.ql-active,
+.ql-toolbar .ql-picker-label:hover {
+  color: #fbbf24 !important;
+}
+
+.ql-toolbar.ql-snow .ql-stroke {
+  stroke: #a1a1aa !important;
+}
+
+.ql-toolbar.ql-snow .ql-fill,
+.ql-toolbar.ql-snow .ql-stroke.ql-fill {
+  fill: #a1a1aa !important;
+}
+
+.ql-toolbar.ql-snow button:hover .ql-stroke,
+.ql-toolbar.ql-snow button.ql-active .ql-stroke,
+.ql-toolbar.ql-snow .ql-picker-label:hover .ql-stroke {
+  stroke: #fbbf24 !important;
+}
+
+.ql-toolbar.ql-snow button:hover .ql-fill,
+.ql-toolbar.ql-snow button.ql-active .ql-fill,
+.ql-toolbar.ql-snow button:hover .ql-stroke.ql-fill,
+.ql-toolbar.ql-snow button.ql-active .ql-stroke.ql-fill,
+.ql-toolbar.ql-snow .ql-picker-label:hover .ql-fill,
+.ql-toolbar.ql-snow .ql-picker-label.ql-active .ql-fill,
+.ql-toolbar.ql-snow .ql-picker-label:hover .ql-stroke.ql-fill,
+.ql-toolbar.ql-snow .ql-picker-label.ql-active .ql-stroke.ql-fill {
+  fill: #fbbf24 !important;
+}
+
+.ql-picker-options {
+  background-color: #3f3f46 !important;
+}
+
+.ql-picker-item {
+  color: #fff !important;
+}
+
+.ql-picker-item.ql-selected,
+.ql-picker-item:hover {
+  color: #fbbf24 !important;
+}
+
+.ql-editor.ql-blank::before {
+  font-style: italic;
+  color: #71717a !important;
+}
+
+/* Project Content Styling */
+.project-content {
+  line-height: 1.8;
+}
+
+.project-content h1,
+.project-content h2,
+.project-content h3,
+.project-content h4,
+.project-content h5,
+.project-content h6 {
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+  font-weight: 700;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.project-content h1 {
+  font-size: 2rem;
+}
+
+.project-content h2 {
+  font-size: 1.75rem;
+}
+
+.project-content h3 {
+  font-size: 1.5rem;
+}
+
+.project-content p {
+  margin-bottom: 1rem;
+}
+
+.project-content ul,
+.project-content ol {
+  margin-left: 2rem;
+  margin-bottom: 1rem;
+}
+
+.project-content li {
+  margin-bottom: 0.5rem;
+}
+
+.project-content a {
+  color: #FACC15;
+  text-decoration: underline;
+  transition: color 0.3s;
+}
+
+.project-content a:hover {
+  color: #fbbf24;
+}
+
+.project-content blockquote {
+  border-left: 4px solid #FACC15;
+  padding-left: 1rem;
+  margin: 1.5rem 0;
+  color: #d4d4d8;
+  font-style: italic;
+}
