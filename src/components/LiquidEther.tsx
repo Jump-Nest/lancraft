@@ -1070,7 +1070,8 @@ void main(){
       }
     }
 
-    const container = mountRef.current;
+    const container = mountRef.current as HTMLElement;
+    if (!container) return;
     container.style.position = container.style.position || 'relative';
     container.style.overflow = container.style.overflow || 'hidden';
 
