@@ -40,7 +40,6 @@ export default function TipTapEditor({ value, onChange, placeholder }: TipTapEdi
 
   const toggleBold = () => editor.chain().focus().toggleBold().run();
   const toggleItalic = () => editor.chain().focus().toggleItalic().run();
-  const toggleUnderline = () => editor.chain().focus().toggleUnderline().run();
   const toggleStrike = () => editor.chain().focus().toggleStrike().run();
   const toggleHeading1 = () => editor.chain().focus().toggleHeading({ level: 1 }).run();
   const toggleHeading2 = () => editor.chain().focus().toggleHeading({ level: 2 }).run();
@@ -75,17 +74,6 @@ export default function TipTapEditor({ value, onChange, placeholder }: TipTapEdi
           title="Kurzíva"
         >
           I
-        </button>
-        <button
-          onClick={toggleUnderline}
-          className={`px-2 sm:px-3 py-1 rounded text-xs sm:text-sm underline transition flex-shrink-0 ${
-            editor.isActive('underline')
-              ? 'bg-yellow-400 text-zinc-900'
-              : 'bg-zinc-800 text-white hover:bg-zinc-700'
-          }`}
-          title="Podtržení"
-        >
-          U
         </button>
         <button
           onClick={toggleStrike}
