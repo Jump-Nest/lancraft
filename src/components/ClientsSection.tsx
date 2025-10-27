@@ -111,8 +111,8 @@ export default function ClientsSection() {
 
       {/* Features Section - Black Background */}
       <section className="relative bg-black py-12 sm:py-16 md:py-20 overflow-hidden">
-        {/* Liquid Ether Background Animation */}
-        <div className="absolute inset-0 z-0 pointer-events-none -top-24 -bottom-24">
+        {/* Liquid Ether Background Animation - Only on Desktop */}
+        <div className="absolute inset-0 z-0 pointer-events-none -top-24 -bottom-24 hidden md:block">
           <LiquidEther
             colors={['#FACC15', '#FBD34D', '#FBBF24']}
             mouseForce={20}

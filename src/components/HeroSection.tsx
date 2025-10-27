@@ -68,10 +68,11 @@ export default function HeroSection() {
             alt={`Slide ${currentSlide + 1}`}
             fill
             className="object-cover w-full h-full"
+            style={{ filter: 'blur(1.5px)' }}
             priority={currentSlide === 0}
           />
           {/* Overlay */}
-          <div className="absolute inset-0 bg-black/60" />
+          <div className="absolute inset-0 bg-black/65" />
         </motion.div>
       </AnimatePresence>
 
@@ -87,14 +88,16 @@ export default function HeroSection() {
             className="max-w-2xl w-full"
           >
             {/* Main Headline */}
-            <h1 className="text-2xl sm:text-4xl md:text-6xl lg:text-7xl font-montserrat font-extrabold mb-4 sm:mb-6 leading-tight">
+            <h1 className="text-2xl sm:text-4xl md:text-6xl lg:text-7xl font-montserrat font-extrabold mb-4 sm:mb-6 leading-tight"
+              style={{ textShadow: '0 3px 10px rgba(0,0,0,0.7)' }}>
               <span className="text-white">{slides[currentSlide].title}</span>
               <span className="text-yellow-400">{slides[currentSlide].highlight}</span>
               <span className="text-white">{slides[currentSlide].subtitle}</span>
             </h1>
 
             {/* Description */}
-            <p className="text-sm sm:text-base md:text-lg text-gray-300 font-montserrat mb-6 sm:mb-8 leading-relaxed">
+            <p className="text-sm sm:text-base md:text-lg text-gray-300 font-montserrat mb-6 sm:mb-8 leading-relaxed"
+              style={{ textShadow: '0 2px 6px rgba(0,0,0,0.6)' }}>
               {slides[currentSlide].description}
             </p>
 

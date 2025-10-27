@@ -63,11 +63,12 @@ const ProjectCard = ({ project, index }: { project: Project; index: number }) =>
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className="object-cover w-full h-full"
+            style={{ filter: 'blur(1px)' }}
           />
 
           {/* Overlay with gradient - darker on hover for better contrast */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black from-0% via-black/50 via-30% to-transparent to-100% 
-            group-hover:from-black group-hover:via-black/60 transition-all duration-300" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black from-0% via-black/60 via-30% to-black/40 to-100% 
+            group-hover:from-black group-hover:via-black/70 transition-all duration-300" />
 
           {/* Shine effect overlay */}
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/0 to-transparent 
@@ -77,9 +78,11 @@ const ProjectCard = ({ project, index }: { project: Project; index: number }) =>
           <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-5 md:p-7 text-white transform 
             group-hover:translate-y-0 transition-transform duration-300">
             <h3 className="text-lg sm:text-xl md:text-3xl font-montserrat font-bold mb-2 sm:mb-3 
-              group-hover:text-yellow-300 transition-colors duration-300">{project.title}</h3>
+              group-hover:text-yellow-300 transition-colors duration-300"
+              style={{ textShadow: '0 2px 6px rgba(0,0,0,0.7)' }}>{project.title}</h3>
             <p className="text-xs sm:text-sm md:text-base text-white font-montserrat font-light leading-relaxed opacity-90
-              group-hover:opacity-100 transition-opacity duration-300">
+              group-hover:opacity-100 transition-opacity duration-300"
+              style={{ textShadow: '0 1px 4px rgba(0,0,0,0.6)' }}>
               {truncateText(project.description)}
             </p>
           </div>
@@ -133,7 +136,7 @@ export default function ProjectsSection() {
   return (
     <section id="projects" className="relative bg-black py-12 sm:py-16 md:py-20 lg:py-24 overflow-hidden">
       {/* Liquid Ether Background Animation */}
-      <div className="absolute inset-0 z-0 pointer-events-none -top-24 -bottom-24">
+      <div className="absolute inset-0 z-0 pointer-events-none -top-24 -bottom-24 hidden md:block">
         <LiquidEther
           colors={['#FACC15', '#FBD34D', '#FBBF24']}
           mouseForce={20}

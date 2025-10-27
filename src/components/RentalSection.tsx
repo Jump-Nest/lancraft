@@ -13,20 +13,28 @@ export default function RentalSection() {
   return (
     <section id="rental" className="relative w-full h-[578px] md:h-[700px] overflow-hidden">
       {/* Background Image with Filter */}
-      <div className="absolute inset-0 w-[54%]">
+      <div className="absolute inset-0 w-full md:w-[54%]">
         <Image
           src="/LC%20WEB%20podklady/4)%20pronajem%20techniky/1%20-%20pronajem%20techniky.jpg"
           alt="Pronájem techniky"
           fill
           className="object-cover w-full h-full"
-          style={{ filter: 'brightness(0.6)' }}
+          style={{ filter: 'brightness(0.4) blur(2px)' }}
           priority
         />
       </div>
 
-      {/* Gradient Overlay - 54% photo, 46% solid gray background with smooth transition */}
+      {/* Mobile Dark Overlay */}
       <div 
-        className="absolute inset-0 z-10"
+        className="absolute inset-0 z-10 md:hidden"
+        style={{
+          background: 'rgba(0,0,0,0.45)'
+        }}
+      />
+
+      {/* Desktop Gradient Overlay - 54% photo, 46% solid gray background */}
+      <div 
+        className="absolute inset-0 z-10 hidden md:block"
         style={{
           background: 'linear-gradient(to right, transparent 0%, transparent 35%, rgba(17,17,17,1) 54%, rgba(17,17,17,1) 100%)'
         }}
@@ -43,12 +51,14 @@ export default function RentalSection() {
         <div className="w-full md:w-1/2 px-6 sm:px-8 md:px-12">
           <div className="max-w-2xl text-left">
             {/* Title */}
-            <h2 className="text-3xl sm:text-4xl md:text-6xl font-montserrat font-bold text-white mb-6 sm:mb-8">
+            <h2 className="text-3xl sm:text-4xl md:text-6xl font-montserrat font-bold text-white mb-6 sm:mb-8"
+              style={{ textShadow: '0 2px 8px rgba(0,0,0,0.6)' }}>
               Pronájem techniky
             </h2>
 
             {/* Description */}
-            <p className="text-base sm:text-lg md:text-xl font-montserrat text-white opacity-95 leading-relaxed mb-8 sm:mb-10 max-w-xl">
+            <p className="text-base sm:text-lg md:text-xl font-montserrat text-white opacity-95 leading-relaxed mb-8 sm:mb-10 max-w-xl"
+              style={{ textShadow: '0 1px 4px rgba(0,0,0,0.5)' }}>
               Disponujeme desítkami výkonných počítačů, monitorů a notebooků, na které je vždy při zabezpečení vašich eventů spoleň. Zároveň dokážeme z techniky vytvořit herní zónu na míru a doplnit ji o herní konzole, virtuální realitu nebo závodní simulátory.
             </p>
 
