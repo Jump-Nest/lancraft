@@ -46,7 +46,7 @@ export default function ClientsSection() {
   const [isDragging, setIsDragging] = useState(false);
   const x = useMotionValue(0);
   const containerRef = useRef(null);
-  const animationRef = useRef(null);
+  const animationRef = useRef<number | null>(null);
   const startTimeRef = useRef(null);
   const dragStartPositionRef = useRef(0);
 

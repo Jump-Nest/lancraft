@@ -24,7 +24,15 @@ export async function POST(request: NextRequest) {
     for (const migration of migrations) {
       console.log(`Running: ${migration}`);
       try {
-        const { data, error } = await supabase.rpc('exec_sql', { sql: migration }).catch(() => ({ data: null, error: { message: 'exec_sql not available' } }));
+        let data, error;
+        try {
+          const result = await supabase.rpc('exec_sql', { sql: migration });
+          data = result.data;
+          error = result.error;
+        } catch {
+          error = { message: 'exec_sql not available' };
+          data = null;
+        }
         
         if (error && error.message === 'exec_sql not available') {
           // Try alternative method - use raw SQL via REST
