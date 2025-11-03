@@ -19,6 +19,9 @@ async function setupSupabase() {
         title VARCHAR(255) NOT NULL,
         description TEXT NOT NULL,
         image VARCHAR(500),
+        thumbnail_image VARCHAR(500),
+        article_image VARCHAR(500),
+        preview_text TEXT,
         category VARCHAR(50) NOT NULL,
         created_at TIMESTAMP DEFAULT NOW(),
         updated_at TIMESTAMP DEFAULT NOW()

@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { useInView } from '@/hooks/useInView';
 import { useRef, useEffect, useState } from 'react';
 import LiquidEther from './LiquidEther';
+import { useMotionValue, useAnimation } from 'framer-motion';
 
 const clients = [
   { name: 'Yenkee', logo: '/LC%20WEB%20podklady/5)%20nasi%20klienti/Yenkee.png' },
@@ -42,6 +43,67 @@ export default function ClientsSection() {
     triggerOnce: true,
   });
 
+  const [isDragging, setIsDragging] = useState(false);
+  const x = useMotionValue(0);
+  const containerRef = useRef(null);
+  const animationRef = useRef(null);
+  const startTimeRef = useRef(null);
+  const dragStartPositionRef = useRef(0);
+
+  const itemWidth = 260;
+  const itemGap = 48;
+  const loopDistance = clients.length * (itemWidth + itemGap);
+
+  const handleDragStart = () => {
+    dragStartPositionRef.current = x.get();
+    setIsDragging(true);
+  };
+
+  const handleDragEnd = () => {
+    setIsDragging(false);
+  };
+
+  useEffect(() => {
+    const unsubscribe = x.on('change', (latest) => {
+      if (latest <= -loopDistance) {
+        x.set(latest + loopDistance);
+      } else if (latest >= 0) {
+        x.set(latest - loopDistance);
+      }
+    });
+
+    return () => unsubscribe();
+  }, [x, loopDistance]);
+
+  useEffect(() => {
+    if (isDragging) {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+        animationRef.current = null;
+      }
+      return;
+    }
+
+    const speed = 0.5;
+    
+    const animate = () => {
+      if (isDragging) return;
+
+      const currentX = x.get();
+      x.set(currentX - speed);
+      
+      animationRef.current = requestAnimationFrame(animate);
+    };
+
+    animationRef.current = requestAnimationFrame(animate);
+
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, [isDragging, x]);
+
   return (
     <>
       {/* Clients Carousel - White Section */}
@@ -61,49 +123,36 @@ export default function ClientsSection() {
           </motion.div>
 
           {/* Clients Carousel */}
-          <div className="relative mb-6 sm:mb-8 md:mb-8 overflow-hidden h-24 sm:h-28 md:h-40">
+          <div className="relative mb-6 sm:mb-8 md:mb-8 overflow-hidden h-24 sm:h-28 md:h-40 cursor-grab active:cursor-grabbing">
             <motion.div
-              className="flex gap-4 sm:gap-8 md:gap-12 justify-center items-center"
-              animate={{ x: ['0%', '-100%'] }}
-              transition={{ duration: 30, repeat: Infinity, ease: 'linear' }}
+              ref={containerRef}
+              className="flex gap-4 sm:gap-8 md:gap-12 justify-center items-center cursor-grab active:cursor-grabbing"
+              drag="x"
+              dragElastic={0.2}
+              dragMomentum={false}
+              onDragStart={handleDragStart}
+              onDragEnd={handleDragEnd}
+              style={{ x }}
             >
-              {/* First set of logos */}
-              {clients.map((client, index) => (
-                <motion.div
-                  key={`first-${index}`}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={inView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }}
-                  transition={{ duration: 0.5, delay: index * 0.05 }}
-                  className="flex-shrink-0 h-24 sm:h-28 md:h-40 w-32 sm:w-40 md:w-64 relative group bg-gray-50 rounded-lg flex items-center justify-center p-1 sm:p-2"
-                >
-                  <Image
-                    src={client.logo}
-                    alt={client.name}
-                    fill
-                    sizes="(max-width: 640px) 128px, (max-width: 768px) 160px, 256px"
-                    className="object-contain p-1 sm:p-2"
-                  />
-                </motion.div>
-              ))}
-              
-              {/* Duplicate set for seamless loop */}
-              {clients.map((client, index) => (
-                <motion.div
-                  key={`second-${index}`}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={inView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }}
-                  transition={{ duration: 0.5, delay: index * 0.05 }}
-                  className="flex-shrink-0 h-24 sm:h-28 md:h-40 w-32 sm:w-40 md:w-64 relative group bg-gray-50 rounded-lg flex items-center justify-center p-1 sm:p-2"
-                >
-                  <Image
-                    src={client.logo}
-                    alt={client.name}
-                    fill
-                    sizes="(max-width: 640px) 128px, (max-width: 768px) 160px, 256px"
-                    className="object-contain p-1 sm:p-2"
-                  />
-                </motion.div>
-              ))}
+              {[0, 1, 2].map((setIndex) =>
+                clients.map((client, index) => (
+                  <motion.div
+                    key={`${setIndex}-${index}`}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={inView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }}
+                    transition={{ duration: 0.5, delay: index * 0.05 }}
+                    className="flex-shrink-0 h-24 sm:h-28 md:h-40 w-32 sm:w-40 md:w-64 relative group flex items-center justify-center p-1 sm:p-2 select-none"
+                  >
+                    <Image
+                      src={client.logo}
+                      alt={client.name}
+                      fill
+                      sizes="(max-width: 640px) 128px, (max-width: 768px) 160px, 256px"
+                      className="object-contain p-1 sm:p-2 pointer-events-none"
+                    />
+                  </motion.div>
+                ))
+              )}
             </motion.div>
           </div>
         </div>

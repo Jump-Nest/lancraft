@@ -9,6 +9,9 @@ interface Project {
   title: string;
   description: string;
   image: string;
+  thumbnail_image?: string;
+  article_image?: string;
+  preview_text?: string;
   category: string;
   created_at: string;
 }
@@ -70,6 +73,7 @@ export default function ProjectList({ projects, onEdit, onRefresh }: ProjectList
       <table className="w-full text-sm sm:text-base">
         <thead>
           <tr className="border-b border-zinc-700">
+            <th className="text-left px-2 sm:px-4 py-3 text-white font-semibold text-xs sm:text-sm">Náhled</th>
             <th className="text-left px-2 sm:px-4 py-3 text-white font-semibold text-xs sm:text-sm">Název</th>
             <th className="hidden sm:table-cell text-left px-4 py-3 text-white font-semibold text-xs sm:text-sm">Kategorie</th>
             <th className="hidden md:table-cell text-left px-4 py-3 text-white font-semibold text-xs sm:text-sm">Popis</th>
@@ -79,6 +83,11 @@ export default function ProjectList({ projects, onEdit, onRefresh }: ProjectList
         <tbody>
           {projects.map((project) => (
             <tr key={project.id} className="border-b border-zinc-800 hover:bg-zinc-800/50 transition">
+              <td className="px-2 sm:px-4 py-3">
+                {project.thumbnail_image && (
+                  <img src={project.thumbnail_image} alt={project.title} className="w-12 h-12 rounded object-cover" />
+                )}
+              </td>
               <td className="px-2 sm:px-4 py-3 text-white text-xs sm:text-sm truncate">{project.title}</td>
               <td className="hidden sm:table-cell px-4 py-3 text-zinc-400 text-xs sm:text-sm">{project.category}</td>
               <td className="hidden md:table-cell px-4 py-3 text-zinc-400 text-xs sm:text-sm truncate max-w-xs">{stripHtml(project.description)}</td>

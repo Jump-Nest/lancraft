@@ -37,6 +37,10 @@ export default function ImageUpload({ onImageUpload, currentImage }: ImageUpload
     setIsLoading(true);
 
     try {
+      if (!token) {
+        throw new Error('Nejste přihlášeni. Prosím znovu se přihlaste.');
+      }
+
       // Komprese
       const compressedFile = await compressImage(file);
 
@@ -93,29 +97,6 @@ export default function ImageUpload({ onImageUpload, currentImage }: ImageUpload
 
   return (
     <div className="space-y-3">
-      <label className="block text-xs sm:text-sm font-medium text-white">Obrázek projektu</label>
-
-      {preview && (
-        <div className="relative w-full h-32 sm:h-48 bg-zinc-800 rounded overflow-hidden border border-zinc-700">
-          <Image
-            src={preview}
-            alt="Preview"
-            fill
-            className="object-cover"
-          />
-          <button
-            type="button"
-            onClick={() => {
-              setPreview(undefined);
-              onImageUpload('');
-            }}
-            className="absolute top-2 right-2 bg-red-600 hover:bg-red-700 p-1 rounded"
-          >
-            <FiX className="w-4 h-4" />
-          </button>
-        </div>
-      )}
-
       <div
         ref={dragRef}
         onDragOver={handleDragOver}

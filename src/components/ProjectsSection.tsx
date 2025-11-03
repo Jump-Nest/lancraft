@@ -19,6 +19,9 @@ interface Project {
   title: string;
   description: string;
   image: string;
+  thumbnail_image?: string;
+  article_image?: string;
+  preview_text?: string;
   category: string;
 }
 
@@ -58,7 +61,7 @@ const ProjectCard = ({ project, index }: { project: Project; index: number }) =>
         {/* Inner card container */}
         <div className="relative w-full h-full overflow-hidden rounded-lg transform group-hover:scale-110 transition-transform duration-500">
           <Image
-            src={project.image}
+            src={project.thumbnail_image || project.image}
             alt={project.title}
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -83,7 +86,7 @@ const ProjectCard = ({ project, index }: { project: Project; index: number }) =>
             <p className="text-xs sm:text-sm md:text-base text-white font-montserrat font-light leading-relaxed opacity-90
               group-hover:opacity-100 transition-opacity duration-300"
               style={{ textShadow: '0 1px 4px rgba(0,0,0,0.6)' }}>
-              {truncateText(project.description)}
+              {project.preview_text ? truncateText(project.preview_text) : truncateText(project.description)}
             </p>
           </div>
 

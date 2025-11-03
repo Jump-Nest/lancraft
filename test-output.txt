@@ -1,0 +1,23 @@
+Starting test...
+Creating Supabase client...
+Testing SELECT query...
+✅ SELECT works
+Sample record: {
+  "id": 1,
+  "title": "Pokus",
+  "description": "<p class=\"mb-2\"><strong>Lorem Ipsum</strong> is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>",
+  "image": "https://fqgtttzeucumpisgctyf.supabase.co/storage/v1/object/public/project-images/1761465822866-t7g0cc.jpeg",
+  "category": "online",
+  "created_at": "2025-10-26T08:01:34.320982",
+  "updated_at": "2025-10-26T08:01:34.320982"
+}
+
+
+Testing INSERT with new columns...
+❌ Insert Error: Could not find the 'article_image' column of 'projects' in the schema cache
+Full error: {
+  "code": "PGRST204",
+  "details": null,
+  "hint": null,
+  "message": "Could not find the 'article_image' column of 'projects' in the schema cache"
+}

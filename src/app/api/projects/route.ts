@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Neautorizováno' }, { status: 401 });
     }
 
-    const { title, description, image, category } = await request.json();
+    const { title, description, image, category, thumbnail_image, article_image, preview_text } = await request.json();
 
     if (!title || !description || !category) {
       return NextResponse.json({ error: 'Chybí požadovaná pole' }, { status: 400 });
@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
     const supabase = getSupabaseClient();
     const { data, error } = await supabase
       .from('projects')
-      .insert([{ title, description, image, category }])
+      .insert([{ title, description, image, category, thumbnail_image, article_image, preview_text }])
       .select();
 
     if (error) {

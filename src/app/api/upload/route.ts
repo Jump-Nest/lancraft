@@ -15,11 +15,19 @@ function getSupabaseClient() {
 // Ověřit token
 function verifyToken(token: string): boolean {
   try {
-    if (!token.startsWith('Bearer ')) return false;
+    if (!token.startsWith('Bearer ')) {
+      console.log('Token does not start with Bearer');
+      return false;
+    }
     const base64Token = token.substring(7);
     const decodedPassword = Buffer.from(base64Token, 'base64').toString('utf-8');
-    return decodedPassword === process.env.ADMIN_PASSWORD;
-  } catch {
+    console.log('Decoded password:', decodedPassword);
+    console.log('ADMIN_PASSWORD:', process.env.ADMIN_PASSWORD);
+    const isValid = decodedPassword === process.env.ADMIN_PASSWORD;
+    console.log('Token valid:', isValid);
+    return isValid;
+  } catch (err) {
+    console.log('Token verification error:', err);
     return false;
   }
 }
@@ -28,7 +36,11 @@ export async function POST(request: NextRequest) {
   try {
     // Ověřit autentifikaci
     const authHeader = request.headers.get('Authorization');
+    console.log('Auth header:', authHeader);
+    console.log('Verify result:', verifyToken(authHeader || ''));
+    
     if (!authHeader || !verifyToken(authHeader)) {
+      console.log('Authorization failed. Header:', authHeader);
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 

@@ -57,11 +57,11 @@ export async function PUT(
     checkAuth(request);
     const supabase = getSupabaseClient();
     const { id } = await params;
-    const { title, description, image, category } = await request.json();
+    const { title, description, image, category, thumbnail_image, article_image, preview_text } = await request.json();
 
     const { data, error } = await supabase
       .from('projects')
-      .update({ title, description, image, category, updated_at: new Date() })
+      .update({ title, description, image, category, thumbnail_image, article_image, preview_text, updated_at: new Date() })
       .eq('id', id)
       .select()
       .single();

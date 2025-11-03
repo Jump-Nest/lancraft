@@ -4,12 +4,16 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/lib/auth-context';
 import ImageUpload from './ImageUpload';
 import TipTapEditor from './TipTapEditor';
+import ImageEditor from './ImageEditor';
 
 interface Project {
   id?: number;
   title: string;
   description: string;
   image: string;
+  thumbnail_image?: string;
+  article_image?: string;
+  preview_text?: string;
   category: string;
 }
 
@@ -32,11 +36,16 @@ export default function ProjectForm({ project, onSuccess, onCancel }: ProjectFor
     title: '',
     description: '',
     image: '',
+    thumbnail_image: '',
+    article_image: '',
+    preview_text: '',
     category: 'online',
     ...project,
   });
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [showImageEditor, setShowImageEditor] = useState(false);
+  const [tempThumbnailImage, setTempThumbnailImage] = useState('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -57,6 +66,40 @@ export default function ProjectForm({ project, onSuccess, onCancel }: ProjectFor
     setFormData((prev) => ({
       ...prev,
       image: url,
+    }));
+  };
+
+  const handleThumbnailUpload = (url: string) => {
+    setTempThumbnailImage(url);
+    setShowImageEditor(true);
+  };
+
+  const handleImageEditorSave = (editedImageUrl: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      thumbnail_image: editedImageUrl,
+    }));
+    setShowImageEditor(false);
+    setTempThumbnailImage('');
+  };
+
+  const handleImageEditorCancel = () => {
+    setShowImageEditor(false);
+    setTempThumbnailImage('');
+  };
+
+  const handleArticleImageUpload = (url: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      article_image: url,
+    }));
+  };
+
+  const handlePreviewTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const { value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      preview_text: value,
     }));
   };
 
@@ -108,6 +151,7 @@ export default function ProjectForm({ project, onSuccess, onCancel }: ProjectFor
   };
 
   return (
+    <>
     <form onSubmit={handleSubmit} className="bg-zinc-900 rounded-lg p-4 sm:p-6 border border-zinc-800 space-y-4 sm:space-y-5">
       <h3 className="text-lg sm:text-xl font-bold text-white mb-4 sm:mb-6">
         {project?.id ? 'Upravit projekt' : 'Nový projekt'}
@@ -144,6 +188,20 @@ export default function ProjectForm({ project, onSuccess, onCancel }: ProjectFor
         </select>
       </div>
 
+      {/* Preview Text */}
+      <div>
+        <label className="block text-xs sm:text-sm font-medium text-white mb-2">Text náhledu (Front page) *</label>
+        <textarea
+          name="preview_text"
+          value={formData.preview_text || ''}
+          onChange={handlePreviewTextChange}
+          className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded text-white text-sm placeholder-zinc-500 focus:outline-none focus:border-yellow-400"
+          placeholder="Napište text, který se bude zobrazovat na front page..."
+          rows={3}
+        />
+        <p className="text-xs text-zinc-400 mt-1">Pokud není vyplněno, použije se začátek popisu</p>
+      </div>
+
       {/* Rich Text Editor */}
       <div>
         <label className="block text-xs sm:text-sm font-medium text-white mb-2">Popis projektu *</label>
@@ -155,8 +213,30 @@ export default function ProjectForm({ project, onSuccess, onCancel }: ProjectFor
         <p className="text-xs text-zinc-400 mt-1">Můžete formátovat text - bold, kurzíva, nadpisy, seznamy...</p>
       </div>
 
-      {/* Image Upload */}
-      <ImageUpload onImageUpload={handleImageUpload} currentImage={formData.image} />
+      {/* Image Uploads */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+        {/* Thumbnail Image Upload */}
+        <div>
+          <label className="block text-xs sm:text-sm font-medium text-white mb-2">Obrázek pro Front page (náhled) *</label>
+          <ImageUpload onImageUpload={handleThumbnailUpload} currentImage={formData.thumbnail_image} />
+          {formData.thumbnail_image && (
+            <div className="mt-3 relative w-full h-32 rounded overflow-hidden border border-zinc-700">
+              <img src={formData.thumbnail_image} alt="Thumbnail preview" className="w-full h-full object-cover" />
+            </div>
+          )}
+        </div>
+
+        {/* Article Image Upload */}
+        <div>
+          <label className="block text-xs sm:text-sm font-medium text-white mb-2">Obrázek v článku *</label>
+          <ImageUpload onImageUpload={handleArticleImageUpload} currentImage={formData.article_image} />
+          {formData.article_image && (
+            <div className="mt-3 relative w-full h-32 rounded overflow-hidden border border-zinc-700">
+              <img src={formData.article_image} alt="Article image preview" className="w-full h-full object-cover" />
+            </div>
+          )}
+        </div>
+      </div>
 
       {/* Chyby */}
       {error && (
@@ -183,5 +263,14 @@ export default function ProjectForm({ project, onSuccess, onCancel }: ProjectFor
         </button>
       </div>
     </form>
+
+    {showImageEditor && tempThumbnailImage && (
+      <ImageEditor
+        imageUrl={tempThumbnailImage}
+        onSave={handleImageEditorSave}
+        onCancel={handleImageEditorCancel}
+      />
+    )}
+    </>
   );
 }

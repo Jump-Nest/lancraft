@@ -14,6 +14,9 @@ interface Project {
   title: string;
   description: string;
   image: string;
+  thumbnail_image?: string;
+  article_image?: string;
+  preview_text?: string;
   category: string;
   created_at: string;
 }
@@ -89,7 +92,7 @@ export default function ProjectPage() {
           {/* Obrázek */}
           <div className="relative w-full h-[250px] sm:h-[350px] md:h-[500px] lg:h-[600px] rounded-lg overflow-hidden mb-8 sm:mb-10 md:mb-12">
             <Image
-              src={project.image}
+              src={project.article_image || project.image}
               alt={project.title}
               fill
               className="object-cover w-full h-full"
