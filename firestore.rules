@@ -1,0 +1,14 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Projekty - čtení pro všechny, zápis pouze přes API
+    match /projects/{projectId} {
+      // Povolit čtení pro všechny
+      allow read: if true;
+      
+      // Zápis zakázán - vše probíhá přes API s admin heslem
+      allow write: if false;
+    }
+  }
+}
+

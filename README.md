@@ -1,17 +1,20 @@
 # LanCraft - Modern Gaming Event Agency Website
 
-Profesionální website pro agentuру LanCraft vybavený moderními animacemi a responzivním designem.
+Profesionální website pro agenturu LanCraft vybavený moderními animacemi a responzivním designem.
 
 ## 🚀 Technologie
 
 - **Next.js 15** - React framework pro produkci
+- **Firebase** - Firestore Database + Storage
 - **Tailwind CSS** - Utility-first CSS framework
 - **Framer Motion** - Animace a interakce
 - **React Icons** - Ikonové sady
 - **TypeScript** - Typová bezpečnost
+- **TipTap** - Rich text editor pro admin panel
 
 ## 📋 Vlastnosti
 
+### Frontend:
 - ✨ Moderní design s gradientem a animacemi
 - 📱 Plně responzivní pro všechna zařízení
 - 🎨 Sekce:
@@ -23,6 +26,14 @@ Profesionální website pro agentuру LanCraft vybavený moderními animacemi a
 - 🎯 Optimalizovaný pro vyhledávače (SEO)
 - ⚡ Rychlý výkon
 - 🌙 Tmavý, moderní design
+
+### Admin Panel:
+- 🔐 Zabezpečený admin panel s heslem
+- ✏️ Rich text editor pro psaní článků
+- 🖼️ Drag & drop upload obrázků s automatickou kompresí
+- 📊 Správa projektů (CRUD operace)
+- 🔥 Firebase Firestore pro databázi
+- 📦 Firebase Storage pro obrázky
 
 ## 🏗️ Struktura Projektu
 
@@ -53,16 +64,40 @@ lancraft-web/
 
 ## 🚀 Spuštění
 
+### ⚠️ DŮLEŽITÉ: Firebase Setup
+Před spuštěním aplikace musíte nastavit Firebase! Následujte návod v **FIREBASE_SETUP.md**.
+
+**Rychlý checklist:**
+1. Vytvořte Firebase projekt
+2. Nastavte Firestore Database a Storage
+3. Zkopírujte Firebase config do `.env.local`
+4. Nastavte Security Rules
+
+Detailní návod: **FIREBASE_SETUP.md** | Checklist: **CHECKLIST.md**
+
 ### Instalace
 ```bash
 npm install
+```
+
+### Konfigurace
+Vyplňte Firebase credentials v `.env.local`:
+```env
+NEXT_PUBLIC_FIREBASE_API_KEY=your-api-key
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your-project.firebaseapp.com
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=your-project-id
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your-project.appspot.com
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your-sender-id
+NEXT_PUBLIC_FIREBASE_APP_ID=your-app-id
+ADMIN_PASSWORD=your-strong-password
 ```
 
 ### Vývoj
 ```bash
 npm run dev
 ```
-Web bude dostupný na `http://localhost:3000`
+- Web: `http://localhost:3000`
+- Admin: `http://localhost:3000/admin/login`
 
 ### Build pro produkci
 ```bash

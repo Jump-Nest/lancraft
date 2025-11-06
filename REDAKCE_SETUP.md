@@ -5,20 +5,35 @@
 Kompletní systém pro správu projektů v sekci "Naše projekty" s:
 - **Rich Text Editor** pro psaní článků s formátováním
 - **Image Upload** s automatickou kompresí (75% kvalita, max 500 KB)
-- **Supabase Storage** pro bezpečné ukládání obrázků
+- **Firebase Storage** pro bezpečné ukládání obrázků
 - **Admin Dashboard** pro snadnou správu obsahu
 
 ---
 
 ## 🚀 Instalace
 
-### 1️⃣ Přidejte balíčky
+⚠️ **DŮLEŽITÉ:** Tento projekt nyní používá **Firebase** místo Supabase!
 
-```bash
-npm install react-quill browser-image-compression
-```
+Prosím, přečtěte si **FIREBASE_SETUP.md** pro kompletní návod na nastavení.
 
-### 2️⃣ Nastavení Supabase
+### Rychlý start
+
+1. Vytvořte Firebase projekt na https://console.firebase.google.com/
+2. Nastavte Firestore Database a Storage
+3. Zkopírujte Firebase konfiguraci do `.env.local`
+4. Spusťte `npm run dev`
+
+---
+
+## 📚 Dokumentace
+
+Pro detailní návod viz **FIREBASE_SETUP.md**
+
+---
+
+## ⚠️ Migrace ze Supabase (zastaralé)
+
+### 2️⃣ Nastavení Supabase (ZASTARALÉ - NEPOUŽÍVAT)
 
 #### A) Přihlašte se do Supabase
 
@@ -140,17 +155,19 @@ Přihlaste se heslem z `ADMIN_PASSWORD` (výchozí: `admin123`)
 
 ### Kompresi
 - **Maximální velikost**: 500 KB po kompresi
-- **Kvalita**: 75% (je stále velmi dobrá pro web)
+- **Kvalita**: 85% (vynikající kvalita pro web)
 - **Maximální rozměry**: 1920x1920 px
 - **Formáty**: JPG, PNG, WebP, GIF
+- **Progress bar**: Vidíte průběh komprese v reálném čase
+- **Web Worker**: Komprese probíhá na pozadí (neblokuje UI)
 
 ### Uložení
-- Obrázky se ukládají do Supabase Storage bucketu `project-images`
+- Obrázky se ukládají do Firebase Storage ve složce `project-images`
 - Automaticky se vygeneruje veřejná URL
-- URL se uloží v databázi v poli `image`
+- URL se uloží v databázi v poli `image`, `thumbnail_image` nebo `article_image`
 
 ### Preview
-- Během uploadu vidíte náhled
+- Během uploadu vidíte náhled a progress bar
 - Můžete kliknutím na X náhled smazat a uploadovat jiný obrázek
 
 ---

@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['localhost', 'vercel.app', 'fqgtttzeucumpisgctyf.supabase.co'],
+    domains: ['localhost', 'vercel.app', 'firebasestorage.googleapis.com'],
     formats: ['image/avif', 'image/webp'],
   },
 };

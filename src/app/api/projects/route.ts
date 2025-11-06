@@ -1,31 +1,24 @@
-import { createClient } from '@supabase/supabase-js';
 import { NextRequest, NextResponse } from 'next/server';
-
-function getSupabaseClient() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-  if (!supabaseUrl || !supabaseServiceKey) {
-    throw new Error('Chybí Supabase environment variables');
-  }
-
-  return createClient(supabaseUrl, supabaseServiceKey);
-}
+import { db } from '@/lib/firebase';
+import { collection, getDocs, addDoc, query, orderBy, Timestamp } from 'firebase/firestore';
 
 export async function GET() {
   try {
-    const supabase = getSupabaseClient();
-    const { data, error } = await supabase
-      .from('projects')
-      .select('*')
-      .order('created_at', { ascending: false });
+    const projectsRef = collection(db, 'projects');
+    const q = query(projectsRef, orderBy('created_at', 'desc'));
+    const querySnapshot = await getDocs(q);
 
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
-    }
+    const projects = querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+      // Převést Firestore Timestamp na ISO string pro kompatibilitu
+      created_at: doc.data().created_at?.toDate?.()?.toISOString() || new Date().toISOString(),
+      updated_at: doc.data().updated_at?.toDate?.()?.toISOString() || new Date().toISOString(),
+    }));
 
-    return NextResponse.json(data);
+    return NextResponse.json(projects);
   } catch (err) {
+    console.error('Chyba při načítání projektů:', err);
     return NextResponse.json({ error: 'Chyba při načítání projektů' }, { status: 500 });
   }
 }
@@ -35,7 +28,7 @@ export async function POST(request: NextRequest) {
     // Ověření přístupu - dekóduj token a porovnej s heslem
     const token = request.headers.get('authorization')?.replace('Bearer ', '');
     const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
-    
+
     if (!token || !ADMIN_PASSWORD) {
       return NextResponse.json({ error: 'Neautorizováno' }, { status: 401 });
     }
@@ -51,18 +44,38 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Chybí požadovaná pole' }, { status: 400 });
     }
 
-    const supabase = getSupabaseClient();
-    const { data, error } = await supabase
-      .from('projects')
-      .insert([{ title, description, image, category, thumbnail_image, article_image, preview_text }])
-      .select();
+    const projectsRef = collection(db, 'projects');
+    const now = Timestamp.now();
 
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
-    }
+    const docRef = await addDoc(projectsRef, {
+      title,
+      description,
+      image: image || null,
+      category,
+      thumbnail_image: thumbnail_image || null,
+      article_image: article_image || null,
+      preview_text: preview_text || null,
+      created_at: now,
+      updated_at: now,
+    });
 
-    return NextResponse.json(data[0], { status: 201 });
+    // Vrátit vytvořený projekt s ID
+    const newProject = {
+      id: docRef.id,
+      title,
+      description,
+      image,
+      category,
+      thumbnail_image,
+      article_image,
+      preview_text,
+      created_at: now.toDate().toISOString(),
+      updated_at: now.toDate().toISOString(),
+    };
+
+    return NextResponse.json(newProject, { status: 201 });
   } catch (err) {
+    console.error('Chyba při vytváření projektu:', err);
     return NextResponse.json({ error: 'Chyba při vytváření projektu' }, { status: 500 });
   }
 }

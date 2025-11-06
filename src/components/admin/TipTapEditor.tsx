@@ -1,8 +1,10 @@
 'use client';
 
+import { useState } from 'react';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Link from '@tiptap/extension-link';
+import { VideoExtension, getVideoEmbedUrl } from '@/lib/video-extension';
 
 interface TipTapEditorProps {
   value: string;
@@ -11,6 +13,10 @@ interface TipTapEditorProps {
 }
 
 export default function TipTapEditor({ value, onChange, placeholder }: TipTapEditorProps) {
+  const [showVideoDialog, setShowVideoDialog] = useState(false);
+  const [videoUrl, setVideoUrl] = useState('');
+  const [videoError, setVideoError] = useState('');
+
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -23,6 +29,7 @@ export default function TipTapEditor({ value, onChange, placeholder }: TipTapEdi
         openOnClick: false,
         HTMLAttributes: { class: 'text-yellow-400 underline' },
       }),
+      VideoExtension,
     ],
     content: value || '',
     onUpdate: ({ editor }) => {
@@ -37,6 +44,29 @@ export default function TipTapEditor({ value, onChange, placeholder }: TipTapEdi
   });
 
   if (!editor) return null;
+
+  const handleVideoInsert = () => {
+    setVideoError('');
+    
+    if (!videoUrl.trim()) {
+      setVideoError('Prosím zadejte URL videa');
+      return;
+    }
+
+    const result = getVideoEmbedUrl(videoUrl);
+    if (!result) {
+      setVideoError('Nepodporované video URL. Zkuste YouTube, Vimeo, Twitch, Instagram nebo TikTok.');
+      return;
+    }
+
+    editor.chain().focus().setVideo({
+      src: result.embedUrl,
+      platform: result.platform,
+    }).run();
+
+    setVideoUrl('');
+    setShowVideoDialog(false);
+  };
 
   const toggleBold = () => editor.chain().focus().toggleBold().run();
   const toggleItalic = () => editor.chain().focus().toggleItalic().run();
@@ -167,6 +197,15 @@ export default function TipTapEditor({ value, onChange, placeholder }: TipTapEdi
         <div className="border-l border-zinc-700 mx-1 flex-shrink-0" />
 
         <button
+          onClick={() => setShowVideoDialog(true)}
+          className="px-2 sm:px-3 py-1 rounded text-xs sm:text-sm bg-zinc-800 text-white hover:bg-zinc-700 transition flex-shrink-0"
+          title="Vložit video"
+        >
+          <span className="hidden sm:inline">▶ Video</span>
+          <span className="sm:hidden">▶</span>
+        </button>
+
+        <button
           onClick={clearFormatting}
           className="px-2 sm:px-3 py-1 rounded text-xs sm:text-sm bg-red-900 text-white hover:bg-red-800 transition flex-shrink-0"
           title="Vyčistit formátování"
@@ -178,6 +217,63 @@ export default function TipTapEditor({ value, onChange, placeholder }: TipTapEdi
 
       {/* Editor */}
       <EditorContent editor={editor} />
+
+      {/* Video Dialog */}
+      {showVideoDialog && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-zinc-900 border border-zinc-700 rounded-lg p-6 max-w-md w-full">
+            <h3 className="text-lg font-bold text-white mb-4">Vložit video</h3>
+            
+            <div className="mb-4">
+              <label className="block text-sm text-white mb-2">Video URL</label>
+              <input
+                type="text"
+                value={videoUrl}
+                onChange={(e) => {
+                  setVideoUrl(e.target.value);
+                  setVideoError('');
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleVideoInsert();
+                  }
+                }}
+                placeholder="https://youtube.com/watch?v=..."
+                className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded text-white text-sm placeholder-zinc-500 focus:outline-none focus:border-yellow-400"
+                autoFocus
+              />
+              <p className="text-xs text-zinc-400 mt-2">
+                Podporované: YouTube, Vimeo, Twitch, Instagram, TikTok
+              </p>
+            </div>
+
+            {videoError && (
+              <div className="bg-red-900/20 border border-red-700 rounded px-3 py-2 text-red-300 text-xs mb-4">
+                {videoError}
+              </div>
+            )}
+
+            <div className="flex gap-2">
+              <button
+                onClick={handleVideoInsert}
+                className="flex-1 bg-yellow-400 hover:bg-yellow-300 text-black font-bold py-2 px-4 rounded transition-colors text-sm"
+              >
+                Vložit
+              </button>
+              <button
+                onClick={() => {
+                  setShowVideoDialog(false);
+                  setVideoUrl('');
+                  setVideoError('');
+                }}
+                className="flex-1 bg-zinc-700 hover:bg-zinc-600 text-white font-bold py-2 px-4 rounded transition-colors text-sm"
+              >
+                Zrušit
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

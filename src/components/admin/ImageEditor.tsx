@@ -48,8 +48,8 @@ export default function ImageEditor({ imageUrl, onSave, onCancel }: ImageEditorP
   };
 
   useEffect(() => {
-    drawCanvas(editorCanvasRef.current, 800, 500);
-    drawCanvas(previewCanvasRef.current, 800, 500);
+    drawCanvas(editorCanvasRef.current, 800, 1200);
+    drawCanvas(previewCanvasRef.current, 800, 1200);
   }, [image, scale, offsetX, offsetY]);
 
   const handleMouseDown = (e: React.MouseEvent) => {
@@ -100,7 +100,7 @@ export default function ImageEditor({ imageUrl, onSave, onCancel }: ImageEditorP
               onMouseUp={handleMouseUp}
               onMouseLeave={handleMouseUp}
               className="w-full border border-zinc-600 rounded cursor-move bg-black"
-              style={{ aspectRatio: '800/500' }}
+              style={{ aspectRatio: '2/3' }}
             />
 
             <div className="flex gap-2">
@@ -130,13 +130,12 @@ export default function ImageEditor({ imageUrl, onSave, onCancel }: ImageEditorP
 
           {/* Preview */}
           <div className="flex flex-col gap-4">
-            <label className="text-sm font-medium text-white">Náhled na Front page:</label>
+            <label className="text-sm font-medium text-white">Náhled na Front page (poměr 2:3):</label>
             <div className="relative w-full rounded-lg overflow-hidden shadow-lg shadow-transparent group-hover:shadow-yellow-400/30 transition-shadow duration-300 border border-zinc-700">
-              <div className="relative w-full h-[300px] sm:h-[400px] md:h-[500px] rounded-lg overflow-hidden transform group-hover:scale-110 transition-transform duration-500">
+              <div className="relative w-full rounded-lg overflow-hidden transform group-hover:scale-110 transition-transform duration-500" style={{ aspectRatio: '2/3' }}>
                 <canvas
                   ref={previewCanvasRef}
-                  className="w-full h-full absolute inset-0"
-                  style={{ aspectRatio: '16/10', objectFit: 'cover' }}
+                  className="w-full h-full absolute inset-0 object-cover"
                 />
 
                 {/* Overlay with gradient */}
@@ -153,7 +152,7 @@ export default function ImageEditor({ imageUrl, onSave, onCancel }: ImageEditorP
                 </div>
               </div>
             </div>
-            <p className="text-xs text-zinc-400">Takto bude obrázek vypadat na front page</p>
+            <p className="text-xs text-zinc-400">Takto bude obrázek vypadat na front page (800×1200px)</p>
           </div>
         </div>
 

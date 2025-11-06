@@ -1,0 +1,14 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Pravidla pro project-images
+    match /project-images/{imageId} {
+      // Povolit čtení pro všechny
+      allow read: if true;
+      
+      // Zápis zakázán - vše probíhá přes API s admin heslem
+      allow write: if false;
+    }
+  }
+}
+

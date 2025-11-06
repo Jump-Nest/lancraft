@@ -95,6 +95,20 @@ export default function ProjectForm({ project, onSuccess, onCancel }: ProjectFor
     }));
   };
 
+  const handleThumbnailRemove = () => {
+    setFormData((prev) => ({
+      ...prev,
+      thumbnail_image: '',
+    }));
+  };
+
+  const handleArticleImageRemove = () => {
+    setFormData((prev) => ({
+      ...prev,
+      article_image: '',
+    }));
+  };
+
   const handlePreviewTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const { value } = e.target;
     setFormData((prev) => ({
@@ -117,8 +131,13 @@ export default function ProjectForm({ project, onSuccess, onCancel }: ProjectFor
       return;
     }
 
-    if (!formData.image) {
-      setError('Obrázek je povinný');
+    if (!formData.thumbnail_image) {
+      setError('Obrázek pro Front page je povinný');
+      return;
+    }
+
+    if (!formData.article_image) {
+      setError('Obrázek v článku je povinný');
       return;
     }
 
@@ -128,13 +147,18 @@ export default function ProjectForm({ project, onSuccess, onCancel }: ProjectFor
       const method = project?.id ? 'PUT' : 'POST';
       const endpoint = project?.id ? `/api/projects/${project.id}` : '/api/projects';
 
+      const dataToSend = {
+        ...formData,
+        image: formData.thumbnail_image || formData.article_image || formData.image,
+      };
+
       const response = await fetch(endpoint, {
         method,
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(dataToSend),
       });
 
       if (!response.ok) {
@@ -218,23 +242,25 @@ export default function ProjectForm({ project, onSuccess, onCancel }: ProjectFor
         {/* Thumbnail Image Upload */}
         <div>
           <label className="block text-xs sm:text-sm font-medium text-white mb-2">Obrázek pro Front page (náhled) *</label>
-          <ImageUpload onImageUpload={handleThumbnailUpload} currentImage={formData.thumbnail_image} />
-          {formData.thumbnail_image && (
-            <div className="mt-3 relative w-full h-32 rounded overflow-hidden border border-zinc-700">
-              <img src={formData.thumbnail_image} alt="Thumbnail preview" className="w-full h-full object-cover" />
-            </div>
-          )}
+          <p className="text-xs text-zinc-400 mb-2">Ideální velikost: 800×1200px (poměr 2:3)</p>
+          <ImageUpload 
+            onImageUpload={handleThumbnailUpload} 
+            currentImage={formData.thumbnail_image}
+            onImageRemove={handleThumbnailRemove}
+            aspectRatio="2/3"
+          />
         </div>
 
         {/* Article Image Upload */}
         <div>
           <label className="block text-xs sm:text-sm font-medium text-white mb-2">Obrázek v článku *</label>
-          <ImageUpload onImageUpload={handleArticleImageUpload} currentImage={formData.article_image} />
-          {formData.article_image && (
-            <div className="mt-3 relative w-full h-32 rounded overflow-hidden border border-zinc-700">
-              <img src={formData.article_image} alt="Article image preview" className="w-full h-full object-cover" />
-            </div>
-          )}
+          <p className="text-xs text-zinc-400 mb-2">Ideální velikost: 1920×1080px (poměr 16:9)</p>
+          <ImageUpload 
+            onImageUpload={handleArticleImageUpload} 
+            currentImage={formData.article_image}
+            onImageRemove={handleArticleImageRemove}
+            aspectRatio="16/9"
+          />
         </div>
       </div>
 

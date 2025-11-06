@@ -128,7 +128,7 @@ lancraft-web/
 │   │   └── Footer.tsx
 │   ├── lib/
 │   │   ├── auth-context.tsx         ← Auth state management
-│   │   └── supabase.ts              ← Supabase client
+│   │   └── firebase.ts              ← Firebase client
 │   └── hooks/
 │       └── useInView.ts             ← Custom scroll animations
 ├── public/

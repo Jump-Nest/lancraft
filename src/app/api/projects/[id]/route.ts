@@ -1,21 +1,11 @@
-import { createClient } from '@supabase/supabase-js';
 import { NextRequest, NextResponse } from 'next/server';
-
-function getSupabaseClient() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-  if (!supabaseUrl || !supabaseServiceKey) {
-    throw new Error('Chybí Supabase environment variables');
-  }
-
-  return createClient(supabaseUrl, supabaseServiceKey);
-}
+import { db } from '@/lib/firebase';
+import { doc, getDoc, updateDoc, deleteDoc, Timestamp } from 'firebase/firestore';
 
 function checkAuth(request: NextRequest) {
   const token = request.headers.get('authorization')?.replace('Bearer ', '');
   const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
-  
+
   if (!token || !ADMIN_PASSWORD) {
     throw new Error('Neautorizováno');
   }
@@ -31,20 +21,24 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const supabase = getSupabaseClient();
     const { id } = await params;
-    const { data, error } = await supabase
-      .from('projects')
-      .select('*')
-      .eq('id', id)
-      .single();
+    const docRef = doc(db, 'projects', id);
+    const docSnap = await getDoc(docRef);
 
-    if (error) {
+    if (!docSnap.exists()) {
       return NextResponse.json({ error: 'Projekt nenalezen' }, { status: 404 });
     }
 
-    return NextResponse.json(data);
+    const project = {
+      id: docSnap.id,
+      ...docSnap.data(),
+      created_at: docSnap.data().created_at?.toDate?.()?.toISOString() || new Date().toISOString(),
+      updated_at: docSnap.data().updated_at?.toDate?.()?.toISOString() || new Date().toISOString(),
+    };
+
+    return NextResponse.json(project);
   } catch (err) {
+    console.error('Chyba při načítání projektu:', err);
     return NextResponse.json({ error: 'Chyba při načítání projektu' }, { status: 500 });
   }
 }
@@ -55,23 +49,40 @@ export async function PUT(
 ) {
   try {
     checkAuth(request);
-    const supabase = getSupabaseClient();
     const { id } = await params;
     const { title, description, image, category, thumbnail_image, article_image, preview_text } = await request.json();
 
-    const { data, error } = await supabase
-      .from('projects')
-      .update({ title, description, image, category, thumbnail_image, article_image, preview_text, updated_at: new Date() })
-      .eq('id', id)
-      .select()
-      .single();
+    const docRef = doc(db, 'projects', id);
+    const docSnap = await getDoc(docRef);
 
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
+    if (!docSnap.exists()) {
+      return NextResponse.json({ error: 'Projekt nenalezen' }, { status: 404 });
     }
 
-    return NextResponse.json(data);
+    const updateData = {
+      title,
+      description,
+      image: image || null,
+      category,
+      thumbnail_image: thumbnail_image || null,
+      article_image: article_image || null,
+      preview_text: preview_text || null,
+      updated_at: Timestamp.now(),
+    };
+
+    await updateDoc(docRef, updateData);
+
+    // Vrátit aktualizovaný projekt
+    const updatedProject = {
+      id,
+      ...updateData,
+      created_at: docSnap.data().created_at?.toDate?.()?.toISOString() || new Date().toISOString(),
+      updated_at: updateData.updated_at.toDate().toISOString(),
+    };
+
+    return NextResponse.json(updatedProject);
   } catch (err: any) {
+    console.error('Chyba při aktualizaci projektu:', err);
     const message = err.message === 'Neautorizováno' ? 'Neautorizováno' : 'Chyba při aktualizaci';
     const status = err.message === 'Neautorizováno' ? 401 : 500;
     return NextResponse.json({ error: message }, { status });
@@ -84,17 +95,20 @@ export async function DELETE(
 ) {
   try {
     checkAuth(request);
-    const supabase = getSupabaseClient();
     const { id } = await params;
 
-    const { error } = await supabase.from('projects').delete().eq('id', id);
+    const docRef = doc(db, 'projects', id);
+    const docSnap = await getDoc(docRef);
 
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
+    if (!docSnap.exists()) {
+      return NextResponse.json({ error: 'Projekt nenalezen' }, { status: 404 });
     }
+
+    await deleteDoc(docRef);
 
     return NextResponse.json({ success: true });
   } catch (err: any) {
+    console.error('Chyba při mazání projektu:', err);
     const message = err.message === 'Neautorizováno' ? 'Neautorizováno' : 'Chyba při mazání';
     const status = err.message === 'Neautorizováno' ? 401 : 500;
     return NextResponse.json({ error: message }, { status });

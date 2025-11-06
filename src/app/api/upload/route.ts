@@ -1,16 +1,6 @@
-import { createClient } from '@supabase/supabase-js';
 import { NextRequest, NextResponse } from 'next/server';
-
-function getSupabaseClient() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-  if (!supabaseUrl || !supabaseServiceKey) {
-    throw new Error('Chybí Supabase environment variables');
-  }
-
-  return createClient(supabaseUrl, supabaseServiceKey);
-}
+import { storage } from '@/lib/firebase';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 // Ověřit token
 function verifyToken(token: string): boolean {
@@ -38,7 +28,7 @@ export async function POST(request: NextRequest) {
     const authHeader = request.headers.get('Authorization');
     console.log('Auth header:', authHeader);
     console.log('Verify result:', verifyToken(authHeader || ''));
-    
+
     if (!authHeader || !verifyToken(authHeader)) {
       console.log('Authorization failed. Header:', authHeader);
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -65,39 +55,25 @@ export async function POST(request: NextRequest) {
     // Převést na Buffer
     const buffer = Buffer.from(await file.arrayBuffer());
     const fileExt = file.type.split('/')[1] || 'jpg';
-    const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
-    const bucketName = 'project-images';
+    const fileName = `project-images/${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
 
-    const supabase = getSupabaseClient();
+    // Nahrát do Firebase Storage
+    const storageRef = ref(storage, fileName);
+    const metadata = {
+      contentType: file.type,
+      cacheControl: 'public, max-age=3600',
+    };
 
-    // Nahrát do Supabase Storage
-    const { data, error } = await supabase.storage
-      .from(bucketName)
-      .upload(fileName, buffer, {
-        contentType: file.type,
-        cacheControl: '3600',
-      });
-
-    if (error) {
-      console.error('Supabase upload error:', error);
-      console.error('Bucket:', bucketName);
-      console.error('File:', fileName);
-      return NextResponse.json(
-        { error: `Chyba při nahrávání do Supabase: ${error.message}` },
-        { status: 500 }
-      );
-    }
+    await uploadBytes(storageRef, buffer, metadata);
 
     // Získat veřejnou URL
-    const { data: publicUrl } = supabase.storage
-      .from(bucketName)
-      .getPublicUrl(fileName);
+    const downloadURL = await getDownloadURL(storageRef);
 
-    return NextResponse.json({ url: publicUrl.publicUrl });
+    return NextResponse.json({ url: downloadURL });
   } catch (error: any) {
     console.error('Upload error:', error);
     return NextResponse.json(
-      { error: 'Chyba při nahrávání' },
+      { error: `Chyba při nahrávání: ${error.message || 'Neznámá chyba'}` },
       { status: 500 }
     );
   }
