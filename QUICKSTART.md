@@ -78,6 +78,8 @@ ADMIN_PASSWORD=your-strong-password-here
 
 **⚠️ DŮLEŽITÉ:** Změňte `ADMIN_PASSWORD` na silné heslo!
 
+**ℹ️ POZNÁMKA:** Pro development NENÍ potřeba Service Account. Pro produkci viz **FIREBASE_ADMIN_SETUP.md**
+
 ---
 
 ## 🚀 5. Spuštění
