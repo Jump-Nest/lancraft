@@ -5,6 +5,14 @@ export interface VideoOptions {
   allowFullscreen: boolean;
 }
 
+declare module '@tiptap/core' {
+  interface Commands<ReturnType> {
+    video: {
+      setVideo: (options: { src: string; platform: string }) => ReturnType;
+    };
+  }
+}
+
 export const VideoExtension = Node.create<VideoOptions>({
   name: 'video',
   group: 'block',

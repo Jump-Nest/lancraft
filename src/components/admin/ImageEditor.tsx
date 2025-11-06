@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { FiZoomIn, FiZoomOut, FiRotateCcw } from 'react-icons/fi';
 
 interface ImageEditorProps {
@@ -28,7 +28,7 @@ export default function ImageEditor({ imageUrl, onSave, onCancel }: ImageEditorP
     };
   }, [imageUrl]);
 
-  const drawCanvas = (canvas: HTMLCanvasElement | null, width: number, height: number) => {
+  const drawCanvas = useCallback((canvas: HTMLCanvasElement | null, width: number, height: number) => {
     if (!image || !canvas) return;
 
     const ctx = canvas.getContext('2d');
@@ -45,12 +45,12 @@ export default function ImageEditor({ imageUrl, onSave, onCancel }: ImageEditorP
     ctx.scale(scale, scale);
     ctx.drawImage(image, -image.width / 2, -image.height / 2);
     ctx.restore();
-  };
+  }, [image, scale, offsetX, offsetY]);
 
   useEffect(() => {
     drawCanvas(editorCanvasRef.current, 800, 1200);
     drawCanvas(previewCanvasRef.current, 800, 1200);
-  }, [image, scale, offsetX, offsetY]);
+  }, [drawCanvas]);
 
   const handleMouseDown = (e: React.MouseEvent) => {
     setIsDragging(true);

@@ -32,8 +32,6 @@ export default function ImageUpload({ onImageUpload, currentImage, onImageRemove
         maxSizeMB: 0.5, // 500 KB max
         maxWidthOrHeight: 1920,
         useWebWorker: true,
-        quality: 0.85, // 85% kvalita (dobrý kompromis mezi kvalitou a velikostí)
-        initialQuality: 0.85, // Počáteční kvalita
         onProgress: (progress) => {
           setCompressionProgress(progress);
         },

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { useAuth } from '@/lib/auth-context';
 import { FiEdit2, FiTrash2 } from 'react-icons/fi';
 
@@ -85,7 +86,13 @@ export default function ProjectList({ projects, onEdit, onRefresh }: ProjectList
             <tr key={project.id} className="border-b border-zinc-800 hover:bg-zinc-800/50 transition">
               <td className="px-2 sm:px-4 py-3">
                 {project.thumbnail_image && (
-                  <img src={project.thumbnail_image} alt={project.title} className="w-12 h-12 rounded object-cover" />
+                  <Image
+                    src={project.thumbnail_image}
+                    alt={project.title}
+                    width={48}
+                    height={48}
+                    className="w-12 h-12 rounded object-cover"
+                  />
                 )}
               </td>
               <td className="px-2 sm:px-4 py-3 text-white text-xs sm:text-sm truncate">{project.title}</td>
