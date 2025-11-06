@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { adminStorage } from '@/lib/firebase-admin';
+import { storage } from '@/lib/firebase';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 // Ověřit token
 function verifyToken(token: string): boolean {
@@ -56,22 +57,17 @@ export async function POST(request: NextRequest) {
     const fileExt = file.type.split('/')[1] || 'jpg';
     const fileName = `project-images/${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
 
-    // Nahrát do Firebase Storage pomocí Admin SDK
-    const bucket = adminStorage.bucket();
-    const fileRef = bucket.file(fileName);
+    // Nahrát do Firebase Storage
+    const storageRef = ref(storage, fileName);
+    const metadata = {
+      contentType: file.type,
+      cacheControl: 'public, max-age=3600',
+    };
 
-    await fileRef.save(buffer, {
-      metadata: {
-        contentType: file.type,
-        cacheControl: 'public, max-age=3600',
-      },
-    });
-
-    // Nastavit soubor jako veřejně přístupný
-    await fileRef.makePublic();
+    await uploadBytes(storageRef, buffer, metadata);
 
     // Získat veřejnou URL
-    const downloadURL = `https://storage.googleapis.com/${bucket.name}/${fileName}`;
+    const downloadURL = await getDownloadURL(storageRef);
 
     return NextResponse.json({ url: downloadURL });
   } catch (error: any) {

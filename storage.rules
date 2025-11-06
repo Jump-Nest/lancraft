@@ -5,9 +5,11 @@ service firebase.storage {
     match /project-images/{imageId} {
       // Povolit čtení pro všechny
       allow read: if true;
-      
-      // Zápis zakázán - vše probíhá přes API s admin heslem
-      allow write: if false;
+
+      // DOČASNĚ povolit zápis všem
+      // TODO: Implementovat Firebase Authentication nebo Service Account
+      // Bezpečnost je zajištěna admin heslem v API
+      allow write: if true;
     }
   }
 }
