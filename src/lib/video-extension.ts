@@ -8,7 +8,7 @@ export interface VideoOptions {
 declare module '@tiptap/core' {
   interface Commands<ReturnType> {
     video: {
-      setVideo: (options: { src: string; platform: string }) => ReturnType;
+      setVideo: (options: { src: string; platform: string; size?: string }) => ReturnType;
     };
   }
 }
@@ -16,6 +16,7 @@ declare module '@tiptap/core' {
 export const VideoExtension = Node.create<VideoOptions>({
   name: 'video',
   group: 'block',
+  atom: true,
   draggable: true,
   selectable: true,
   
@@ -30,31 +31,23 @@ export const VideoExtension = Node.create<VideoOptions>({
     return {
       src: {
         default: null,
-        parseHTML: (element) => element.getAttribute('src'),
-        renderHTML: (attributes) => ({
-          src: attributes.src,
-        }),
+        parseHTML: (element) => {
+          const iframe = element.querySelector('iframe');
+          return iframe?.getAttribute('src') || element.getAttribute('src');
+        },
       },
       platform: {
         default: 'youtube',
-        parseHTML: (element) => element.getAttribute('data-platform'),
-        renderHTML: (attributes) => ({
-          'data-platform': attributes.platform,
-        }),
+        parseHTML: (element) => {
+          const iframe = element.querySelector('iframe');
+          return iframe?.getAttribute('data-platform') || element.getAttribute('data-platform') || 'youtube';
+        },
       },
-      width: {
-        default: '100%',
-        parseHTML: (element) => element.getAttribute('width'),
-        renderHTML: (attributes) => ({
-          width: attributes.width,
-        }),
-      },
-      height: {
-        default: '400',
-        parseHTML: (element) => element.getAttribute('height'),
-        renderHTML: (attributes) => ({
-          height: attributes.height,
-        }),
+      size: {
+        default: 'large',
+        parseHTML: (element) => {
+          return element.getAttribute('data-size') || 'large';
+        },
       },
     };
   },
@@ -72,20 +65,16 @@ export const VideoExtension = Node.create<VideoOptions>({
       'div',
       {
         'data-type': 'video',
-        class: 'video-wrapper my-4',
-        style: 'position: relative; width: 100%; padding-bottom: 56.25%; height: 0; overflow: hidden;',
+        'data-size': HTMLAttributes.size || 'large',
+        'data-platform': HTMLAttributes.platform || 'youtube',
+        class: 'video-wrapper',
       },
       [
         'iframe',
         {
           src: HTMLAttributes.src,
-          'data-platform': HTMLAttributes.platform,
-          width: '100%',
-          height: '100%',
-          style: 'position: absolute; top: 0; left: 0; width: 100%; height: 100%;',
-          frameborder: '0',
           allow: 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture',
-          allowfullscreen: this.options.allowFullscreen,
+          allowfullscreen: '',
         },
       ],
     ];
@@ -93,13 +82,14 @@ export const VideoExtension = Node.create<VideoOptions>({
 
   addCommands() {
     return {
-      setVideo: (options: { src: string; platform: string }) =>
+      setVideo: (options: { src: string; platform: string; size?: string }) =>
         ({ commands }) => {
           return commands.insertContent({
             type: this.name,
             attrs: {
               src: options.src,
               platform: options.platform,
+              size: options.size || 'large',
             },
           });
         },
@@ -130,7 +120,16 @@ export const getVideoEmbedUrl = (url: string): { embedUrl: string; platform: str
     };
   }
 
-  // Twitch
+  // Twitch Clips
+  const twitchClipMatch = url.match(/twitch\.tv\/[^/]+\/clip\/([a-zA-Z0-9_-]+)/);
+  if (twitchClipMatch) {
+    return {
+      embedUrl: `https://clips.twitch.tv/embed?clip=${twitchClipMatch[1]}&parent=${typeof window !== 'undefined' ? window.location.hostname : 'localhost'}`,
+      platform: 'twitch',
+    };
+  }
+
+  // Twitch VOD and Live
   const twitchMatch = url.match(
     /twitch\.tv\/videos\/(\d+)|twitch\.tv\/(?!directory)([a-zA-Z0-9_]+)(?:\?|$)/
   );

@@ -19,7 +19,30 @@ interface Project {
   preview_text?: string;
   category: string;
   created_at: string;
+  youtube_url?: string;
+  instagram_url?: string;
+  twitch_url?: string;
 }
+
+const getYouTubeEmbedUrl = (url: string): string | null => {
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+  const match = url.match(regExp);
+  return match && match[2].length === 11 ? `https://www.youtube-nocookie.com/embed/${match[2]}?rel=0&modestbranding=1` : null;
+};
+
+const getInstagramEmbedUrl = (url: string): string | null => {
+  const match = url.match(/instagram\.com\/(p|reel)\/([^/?]+)/);
+  return match ? `https://www.instagram.com/${match[1]}/${match[2]}/embed` : null;
+};
+
+const getTwitchClipEmbedUrl = (url: string): string | null => {
+  const match = url.match(/clips\.twitch\.tv\/([^/?]+)/);
+  if (match) {
+    return `https://clips.twitch.tv/embed?clip=${match[1]}&parent=${window.location.hostname}`;
+  }
+  const altMatch = url.match(/twitch\.tv\/\w+\/clip\/([^/?]+)/);
+  return altMatch ? `https://clips.twitch.tv/embed?clip=${altMatch[1]}&parent=${window.location.hostname}` : null;
+};
 
 export default function ProjectPage() {
   const params = useParams();
@@ -127,6 +150,61 @@ export default function ProjectPage() {
               __html: project.description,
             }}
           />
+
+          {/* Videa */}
+          {(project.youtube_url || project.instagram_url || project.twitch_url) && (
+            <div className="mb-12 sm:mb-14 md:mb-16 space-y-6">
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-6">Videa</h2>
+              
+              {project.youtube_url && (
+                getYouTubeEmbedUrl(project.youtube_url) ? (
+                  <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+                    <iframe
+                      className="absolute top-0 left-0 w-full h-full rounded-lg"
+                      src={getYouTubeEmbedUrl(project.youtube_url)!}
+                      title="YouTube video"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    />
+                  </div>
+                ) : (
+                  <a
+                    href={project.youtube_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block bg-zinc-800 hover:bg-zinc-700 text-white rounded-lg p-6 text-center transition"
+                  >
+                    <div className="text-lg font-semibold mb-2">📺 YouTube Video</div>
+                    <div className="text-sm text-zinc-400">Klikněte pro zobrazení na YouTube</div>
+                  </a>
+                )
+              )}
+
+              {project.instagram_url && getInstagramEmbedUrl(project.instagram_url) && (
+                <div className="relative w-full max-w-lg mx-auto" style={{ minHeight: '600px' }}>
+                  <iframe
+                    className="w-full rounded-lg"
+                    src={getInstagramEmbedUrl(project.instagram_url)!}
+                    title="Instagram post"
+                    height="600"
+                    style={{ border: 'none' }}
+                    scrolling="no"
+                  />
+                </div>
+              )}
+
+              {project.twitch_url && getTwitchClipEmbedUrl(project.twitch_url) && (
+                <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+                  <iframe
+                    className="absolute top-0 left-0 w-full h-full rounded-lg"
+                    src={getTwitchClipEmbedUrl(project.twitch_url)!}
+                    title="Twitch clip"
+                    allowFullScreen
+                  />
+                </div>
+              )}
+            </div>
+          )}
 
           {/* CTA tlačítko */}
           <motion.div

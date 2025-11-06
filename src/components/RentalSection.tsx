@@ -18,6 +18,7 @@ export default function RentalSection() {
           src="/LC%20WEB%20podklady/4)%20pronajem%20techniky/1%20-%20pronajem%20techniky.jpg"
           alt="Pronájem techniky"
           fill
+          sizes="(max-width: 768px) 100vw, 54vw"
           className="object-cover w-full h-full"
           style={{ filter: 'brightness(0.4) blur(2px)' }}
           priority

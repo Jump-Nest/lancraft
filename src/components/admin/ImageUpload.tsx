@@ -119,7 +119,7 @@ export default function ImageUpload({ onImageUpload, currentImage, onImageRemove
       {preview ? (
         <div className="relative">
           <div className="relative w-full rounded overflow-hidden border border-zinc-700" style={{ aspectRatio }}>
-            <Image src={preview} alt="Preview" fill className="object-cover" />
+            <Image src={preview} alt="Preview" fill sizes="(max-width: 768px) 100vw, 50vw" className="object-cover" />
           </div>
           {onImageRemove && (
             <button

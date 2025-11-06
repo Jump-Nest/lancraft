@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     console.log('Request body:', JSON.stringify(body, null, 2));
 
-    const { title, description, image, category, thumbnail_image, article_image, preview_text } = body;
+    const { title, description, image, category, thumbnail_image, article_image, preview_text, youtube_url, instagram_url, twitch_url } = body;
 
     if (!title || !description || !category) {
       console.log('Validation failed: Missing required fields');
@@ -76,6 +76,9 @@ export async function POST(request: NextRequest) {
       thumbnail_image: thumbnail_image || null,
       article_image: article_image || null,
       preview_text: preview_text || null,
+      youtube_url: youtube_url || null,
+      instagram_url: instagram_url || null,
+      twitch_url: twitch_url || null,
       created_at: now,
       updated_at: now,
     });
@@ -92,6 +95,9 @@ export async function POST(request: NextRequest) {
       thumbnail_image,
       article_image,
       preview_text,
+      youtube_url,
+      instagram_url,
+      twitch_url,
       created_at: now.toDate().toISOString(),
       updated_at: now.toDate().toISOString(),
     };

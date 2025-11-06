@@ -15,6 +15,7 @@ interface TipTapEditorProps {
 export default function TipTapEditor({ value, onChange, placeholder }: TipTapEditorProps) {
   const [showVideoDialog, setShowVideoDialog] = useState(false);
   const [videoUrl, setVideoUrl] = useState('');
+  const [videoSize, setVideoSize] = useState('large');
   const [videoError, setVideoError] = useState('');
 
   const editor = useEditor({
@@ -37,7 +38,7 @@ export default function TipTapEditor({ value, onChange, placeholder }: TipTapEdi
     },
     editorProps: {
       attributes: {
-        class: 'prose prose-invert max-w-none focus:outline-none bg-zinc-800 text-white p-2 sm:p-3 min-h-48 text-sm sm:text-base',
+        class: 'prose prose-invert max-w-none focus:outline-none bg-zinc-800 text-white p-2 sm:p-3 min-h-48 text-sm sm:text-base editor-content',
       },
     },
     immediatelyRender: false,
@@ -62,9 +63,11 @@ export default function TipTapEditor({ value, onChange, placeholder }: TipTapEdi
     editor.chain().focus().setVideo({
       src: result.embedUrl,
       platform: result.platform,
+      size: videoSize,
     }).run();
 
     setVideoUrl('');
+    setVideoSize('large');
     setShowVideoDialog(false);
   };
 
@@ -80,10 +83,57 @@ export default function TipTapEditor({ value, onChange, placeholder }: TipTapEdi
   const clearFormatting = () => editor.chain().focus().clearNodes().unsetAllMarks().run();
 
   return (
+    <>
+    <style jsx global>{`
+      .editor-content [data-type="video"] {
+        position: relative;
+        margin: 1rem auto;
+        border: 2px solid #facc15;
+        border-radius: 8px;
+        overflow: hidden;
+        background: #18181b;
+        padding-bottom: 56.25%;
+        height: 0;
+      }
+      .editor-content [data-type="video"][data-platform="instagram"] {
+        padding-bottom: 0;
+        height: auto;
+        min-height: 600px;
+      }
+      .editor-content [data-type="video"][data-size="small"] {
+        width: 100%;
+        max-width: 400px;
+      }
+      .editor-content [data-type="video"][data-size="medium"] {
+        width: 100%;
+        max-width: 600px;
+      }
+      .editor-content [data-type="video"][data-size="large"] {
+        width: 100%;
+        max-width: 800px;
+      }
+      .editor-content [data-type="video"][data-size="full"] {
+        width: 100%;
+      }
+      .editor-content [data-type="video"] iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: none;
+        pointer-events: auto;
+      }
+      .editor-content [data-type="video"][data-platform="instagram"] iframe {
+        position: relative;
+        min-height: 600px;
+      }
+    `}</style>
     <div className="border border-zinc-700 rounded overflow-hidden">
       {/* Toolbar */}
       <div className="bg-zinc-900 border-b border-zinc-700 p-2 flex flex-wrap gap-1 overflow-x-auto">
         <button
+          type="button"
           onClick={toggleBold}
           className={`px-2 sm:px-3 py-1 rounded text-xs sm:text-sm font-semibold transition flex-shrink-0 ${
             editor.isActive('bold')
@@ -95,6 +145,7 @@ export default function TipTapEditor({ value, onChange, placeholder }: TipTapEdi
           B
         </button>
         <button
+          type="button"
           onClick={toggleItalic}
           className={`px-2 sm:px-3 py-1 rounded text-xs sm:text-sm italic transition flex-shrink-0 ${
             editor.isActive('italic')
@@ -106,6 +157,7 @@ export default function TipTapEditor({ value, onChange, placeholder }: TipTapEdi
           I
         </button>
         <button
+          type="button"
           onClick={toggleStrike}
           className={`px-2 sm:px-3 py-1 rounded text-xs sm:text-sm line-through transition flex-shrink-0 ${
             editor.isActive('strike')
@@ -120,6 +172,7 @@ export default function TipTapEditor({ value, onChange, placeholder }: TipTapEdi
         <div className="border-l border-zinc-700 mx-1 flex-shrink-0" />
 
         <button
+          type="button"
           onClick={toggleHeading1}
           className={`px-2 sm:px-3 py-1 rounded text-xs sm:text-sm font-bold transition flex-shrink-0 ${
             editor.isActive('heading', { level: 1 })
@@ -131,6 +184,7 @@ export default function TipTapEditor({ value, onChange, placeholder }: TipTapEdi
           H1
         </button>
         <button
+          type="button"
           onClick={toggleHeading2}
           className={`px-2 sm:px-3 py-1 rounded text-xs sm:text-sm font-bold transition flex-shrink-0 ${
             editor.isActive('heading', { level: 2 })
@@ -145,6 +199,7 @@ export default function TipTapEditor({ value, onChange, placeholder }: TipTapEdi
         <div className="border-l border-zinc-700 mx-1 flex-shrink-0" />
 
         <button
+          type="button"
           onClick={toggleBulletList}
           className={`px-2 sm:px-3 py-1 rounded text-xs sm:text-sm transition flex-shrink-0 ${
             editor.isActive('bulletList')
@@ -157,6 +212,7 @@ export default function TipTapEditor({ value, onChange, placeholder }: TipTapEdi
           <span className="sm:hidden">•</span>
         </button>
         <button
+          type="button"
           onClick={toggleOrderedList}
           className={`px-2 sm:px-3 py-1 rounded text-xs sm:text-sm transition flex-shrink-0 ${
             editor.isActive('orderedList')
@@ -172,6 +228,7 @@ export default function TipTapEditor({ value, onChange, placeholder }: TipTapEdi
         <div className="border-l border-zinc-700 mx-1 flex-shrink-0" />
 
         <button
+          type="button"
           onClick={toggleBlockquote}
           className={`px-2 sm:px-3 py-1 rounded text-xs sm:text-sm transition flex-shrink-0 ${
             editor.isActive('blockquote')
@@ -183,6 +240,7 @@ export default function TipTapEditor({ value, onChange, placeholder }: TipTapEdi
           ❝
         </button>
         <button
+          type="button"
           onClick={toggleCodeBlock}
           className={`px-2 sm:px-3 py-1 rounded text-xs sm:text-sm font-mono transition flex-shrink-0 ${
             editor.isActive('codeBlock')
@@ -197,6 +255,7 @@ export default function TipTapEditor({ value, onChange, placeholder }: TipTapEdi
         <div className="border-l border-zinc-700 mx-1 flex-shrink-0" />
 
         <button
+          type="button"
           onClick={() => setShowVideoDialog(true)}
           className="px-2 sm:px-3 py-1 rounded text-xs sm:text-sm bg-zinc-800 text-white hover:bg-zinc-700 transition flex-shrink-0"
           title="Vložit video"
@@ -206,6 +265,7 @@ export default function TipTapEditor({ value, onChange, placeholder }: TipTapEdi
         </button>
 
         <button
+          type="button"
           onClick={clearFormatting}
           className="px-2 sm:px-3 py-1 rounded text-xs sm:text-sm bg-red-900 text-white hover:bg-red-800 transition flex-shrink-0"
           title="Vyčistit formátování"
@@ -247,6 +307,59 @@ export default function TipTapEditor({ value, onChange, placeholder }: TipTapEdi
               </p>
             </div>
 
+            <div className="mb-4">
+              <label className="block text-sm text-white mb-2">Velikost videa</label>
+              <div className="grid grid-cols-4 gap-2">
+                <button
+                  type="button"
+                  onClick={() => setVideoSize('small')}
+                  className={`px-3 py-2 rounded text-xs font-semibold transition ${
+                    videoSize === 'small'
+                      ? 'bg-yellow-400 text-black'
+                      : 'bg-zinc-800 text-white hover:bg-zinc-700'
+                  }`}
+                >
+                  Malé
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setVideoSize('medium')}
+                  className={`px-3 py-2 rounded text-xs font-semibold transition ${
+                    videoSize === 'medium'
+                      ? 'bg-yellow-400 text-black'
+                      : 'bg-zinc-800 text-white hover:bg-zinc-700'
+                  }`}
+                >
+                  Střední
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setVideoSize('large')}
+                  className={`px-3 py-2 rounded text-xs font-semibold transition ${
+                    videoSize === 'large'
+                      ? 'bg-yellow-400 text-black'
+                      : 'bg-zinc-800 text-white hover:bg-zinc-700'
+                  }`}
+                >
+                  Velké
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setVideoSize('full')}
+                  className={`px-3 py-2 rounded text-xs font-semibold transition ${
+                    videoSize === 'full'
+                      ? 'bg-yellow-400 text-black'
+                      : 'bg-zinc-800 text-white hover:bg-zinc-700'
+                  }`}
+                >
+                  Celá šířka
+                </button>
+              </div>
+              <p className="text-xs text-zinc-400 mt-2">
+                Malé: 400px | Střední: 600px | Velké: 800px | Celá šířka: 100%
+              </p>
+            </div>
+
             {videoError && (
               <div className="bg-red-900/20 border border-red-700 rounded px-3 py-2 text-red-300 text-xs mb-4">
                 {videoError}
@@ -255,15 +368,18 @@ export default function TipTapEditor({ value, onChange, placeholder }: TipTapEdi
 
             <div className="flex gap-2">
               <button
+                type="button"
                 onClick={handleVideoInsert}
                 className="flex-1 bg-yellow-400 hover:bg-yellow-300 text-black font-bold py-2 px-4 rounded transition-colors text-sm"
               >
                 Vložit
               </button>
               <button
+                type="button"
                 onClick={() => {
                   setShowVideoDialog(false);
                   setVideoUrl('');
+                  setVideoSize('large');
                   setVideoError('');
                 }}
                 className="flex-1 bg-zinc-700 hover:bg-zinc-600 text-white font-bold py-2 px-4 rounded transition-colors text-sm"
@@ -275,5 +391,6 @@ export default function TipTapEditor({ value, onChange, placeholder }: TipTapEdi
         </div>
       )}
     </div>
+    </>
   );
 }

@@ -15,6 +15,9 @@ interface Project {
   article_image?: string;
   preview_text?: string;
   category: string;
+  youtube_url?: string;
+  instagram_url?: string;
+  twitch_url?: string;
 }
 
 const CATEGORIES = [
@@ -40,6 +43,9 @@ export default function ProjectForm({ project, onSuccess, onCancel }: ProjectFor
     article_image: '',
     preview_text: '',
     category: 'online',
+    youtube_url: '',
+    instagram_url: '',
+    twitch_url: '',
     ...project,
   });
   const [error, setError] = useState('');
@@ -120,27 +126,6 @@ export default function ProjectForm({ project, onSuccess, onCancel }: ProjectFor
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-
-    if (!formData.title.trim()) {
-      setError('Název je povinný');
-      return;
-    }
-
-    if (!formData.description.trim() || formData.description === '<p><br></p>') {
-      setError('Popis je povinný');
-      return;
-    }
-
-    if (!formData.thumbnail_image) {
-      setError('Obrázek pro Front page je povinný');
-      return;
-    }
-
-    if (!formData.article_image) {
-      setError('Obrázek v článku je povinný');
-      return;
-    }
-
     setIsLoading(true);
 
     try {
@@ -183,13 +168,12 @@ export default function ProjectForm({ project, onSuccess, onCancel }: ProjectFor
 
       {/* Název */}
       <div>
-        <label className="block text-xs sm:text-sm font-medium text-white mb-2">Název projektu *</label>
+        <label className="block text-xs sm:text-sm font-medium text-white mb-2">Název projektu</label>
         <input
           type="text"
           name="title"
           value={formData.title}
           onChange={handleChange}
-          required
           className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded text-white text-sm placeholder-zinc-500 focus:outline-none focus:border-yellow-400"
           placeholder="Např. Herní turnaj"
         />
@@ -197,7 +181,7 @@ export default function ProjectForm({ project, onSuccess, onCancel }: ProjectFor
 
       {/* Kategorie */}
       <div>
-        <label className="block text-xs sm:text-sm font-medium text-white mb-2">Kategorie *</label>
+        <label className="block text-xs sm:text-sm font-medium text-white mb-2">Kategorie</label>
         <select
           name="category"
           value={formData.category}
@@ -214,7 +198,7 @@ export default function ProjectForm({ project, onSuccess, onCancel }: ProjectFor
 
       {/* Preview Text */}
       <div>
-        <label className="block text-xs sm:text-sm font-medium text-white mb-2">Text náhledu (Front page) *</label>
+        <label className="block text-xs sm:text-sm font-medium text-white mb-2">Text náhledu (Front page)</label>
         <textarea
           name="preview_text"
           value={formData.preview_text || ''}
@@ -228,7 +212,7 @@ export default function ProjectForm({ project, onSuccess, onCancel }: ProjectFor
 
       {/* Rich Text Editor */}
       <div>
-        <label className="block text-xs sm:text-sm font-medium text-white mb-2">Popis projektu *</label>
+        <label className="block text-xs sm:text-sm font-medium text-white mb-2">Popis projektu</label>
         <TipTapEditor
           value={formData.description}
           onChange={handleDescriptionChange}
@@ -241,7 +225,7 @@ export default function ProjectForm({ project, onSuccess, onCancel }: ProjectFor
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
         {/* Thumbnail Image Upload */}
         <div>
-          <label className="block text-xs sm:text-sm font-medium text-white mb-2">Obrázek pro Front page (náhled) *</label>
+          <label className="block text-xs sm:text-sm font-medium text-white mb-2">Obrázek pro Front page (náhled)</label>
           <p className="text-xs text-zinc-400 mb-2">Ideální velikost: 800×1200px (poměr 2:3)</p>
           <ImageUpload 
             onImageUpload={handleThumbnailUpload} 
@@ -253,13 +237,54 @@ export default function ProjectForm({ project, onSuccess, onCancel }: ProjectFor
 
         {/* Article Image Upload */}
         <div>
-          <label className="block text-xs sm:text-sm font-medium text-white mb-2">Obrázek v článku *</label>
+          <label className="block text-xs sm:text-sm font-medium text-white mb-2">Obrázek v článku</label>
           <p className="text-xs text-zinc-400 mb-2">Ideální velikost: 1920×1080px (poměr 16:9)</p>
           <ImageUpload 
             onImageUpload={handleArticleImageUpload} 
             currentImage={formData.article_image}
             onImageRemove={handleArticleImageRemove}
             aspectRatio="16/9"
+          />
+        </div>
+      </div>
+
+      {/* Video URL */}
+      <div className="space-y-4">
+        <h4 className="text-sm sm:text-base font-semibold text-white">Videa (volitelné)</h4>
+        
+        <div>
+          <label className="block text-xs sm:text-sm font-medium text-white mb-2">YouTube URL</label>
+          <input
+            type="text"
+            name="youtube_url"
+            value={formData.youtube_url || ''}
+            onChange={handleChange}
+            className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded text-white text-sm placeholder-zinc-500 focus:outline-none focus:border-yellow-400"
+            placeholder="https://www.youtube.com/watch?v=..."
+          />
+        </div>
+
+        <div>
+          <label className="block text-xs sm:text-sm font-medium text-white mb-2">Instagram URL</label>
+          <input
+            type="text"
+            name="instagram_url"
+            value={formData.instagram_url || ''}
+            onChange={handleChange}
+            className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded text-white text-sm placeholder-zinc-500 focus:outline-none focus:border-yellow-400"
+            placeholder="https://www.instagram.com/p/... nebo https://www.instagram.com/reel/..."
+          />
+        </div>
+
+        <div>
+          <label className="block text-xs sm:text-sm font-medium text-white mb-2">Twitch URL (klip)</label>
+          <input
+            type="text"
+            name="twitch_url"
+            value={formData.twitch_url || ''}
+            onChange={handleChange}
+            className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded text-white text-sm placeholder-zinc-500 focus:outline-none focus:border-yellow-400"
+            placeholder="https://clips.twitch.tv/..."
           />
         </div>
       </div>

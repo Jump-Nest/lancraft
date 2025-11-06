@@ -97,6 +97,7 @@ export default function Footer() {
                 width={220}
                 height={110}
                 className="object-contain"
+                style={{ width: 'auto', height: 'auto' }}
               />
             </div>
 
