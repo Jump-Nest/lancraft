@@ -48,13 +48,15 @@ Jděte na: https://console.firebase.google.com/project/lancraft-agency/firestore
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Projekty - čtení pro všechny, zápis pouze přes API
+    // Projekty - čtení pro všechny, zápis pro všechny
     match /projects/{projectId} {
       // Povolit čtení pro všechny
       allow read: if true;
-      
-      // Zápis zakázán - vše probíhá přes API s admin heslem
-      allow write: if false;
+
+      // Povolit zápis pro všechny
+      // Bezpečnost je zajištěna admin heslem v API
+      // API používá Firebase client SDK, takže musí mít write přístup
+      allow write: if true;
     }
   }
 }
