@@ -25,27 +25,48 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
+    console.log('POST /api/projects - Start');
+
     // Ověření přístupu - dekóduj token a porovnej s heslem
     const token = request.headers.get('authorization')?.replace('Bearer ', '');
     const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 
+    console.log('Token exists:', !!token);
+    console.log('ADMIN_PASSWORD exists:', !!ADMIN_PASSWORD);
+
     if (!token || !ADMIN_PASSWORD) {
+      console.log('Auth failed: Missing token or password');
       return NextResponse.json({ error: 'Neautorizováno' }, { status: 401 });
     }
 
     const decodedPassword = Buffer.from(token, 'base64').toString();
     if (decodedPassword !== ADMIN_PASSWORD) {
+      console.log('Auth failed: Invalid password');
       return NextResponse.json({ error: 'Neautorizováno' }, { status: 401 });
     }
 
-    const { title, description, image, category, thumbnail_image, article_image, preview_text } = await request.json();
+    console.log('Auth successful');
+
+    const body = await request.json();
+    console.log('Request body:', JSON.stringify(body, null, 2));
+
+    const { title, description, image, category, thumbnail_image, article_image, preview_text } = body;
 
     if (!title || !description || !category) {
+      console.log('Validation failed: Missing required fields');
       return NextResponse.json({ error: 'Chybí požadovaná pole' }, { status: 400 });
     }
 
+    console.log('Validation passed');
+    console.log('Firebase config check:', {
+      apiKey: !!process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+      projectId: !!process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+    });
+
     const projectsRef = collection(db, 'projects');
     const now = Timestamp.now();
+
+    console.log('Creating document...');
 
     const docRef = await addDoc(projectsRef, {
       title,
@@ -58,6 +79,8 @@ export async function POST(request: NextRequest) {
       created_at: now,
       updated_at: now,
     });
+
+    console.log('Document created with ID:', docRef.id);
 
     // Vrátit vytvořený projekt s ID
     const newProject = {
@@ -74,8 +97,14 @@ export async function POST(request: NextRequest) {
     };
 
     return NextResponse.json(newProject, { status: 201 });
-  } catch (err) {
+  } catch (err: any) {
     console.error('Chyba při vytváření projektu:', err);
-    return NextResponse.json({ error: 'Chyba při vytváření projektu' }, { status: 500 });
+    console.error('Error stack:', err.stack);
+    console.error('Error message:', err.message);
+    return NextResponse.json({
+      error: 'Chyba při vytváření projektu',
+      details: err.message,
+      stack: process.env.NODE_ENV === 'development' ? err.stack : undefined
+    }, { status: 500 });
   }
 }
