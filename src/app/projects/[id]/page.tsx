@@ -17,12 +17,19 @@ interface Project {
   thumbnail_image?: string;
   article_image?: string;
   preview_text?: string;
-  category: string;
+  categories: string[];
   created_at: string;
   youtube_url?: string;
   instagram_url?: string;
   twitch_url?: string;
 }
+
+const CATEGORY_NAMES: Record<string, string> = {
+  'offline': 'OFFLINE EVENTY',
+  'online': 'ONLINE MARKETING',
+  'influencer': 'INFLUENCER MARKETING',
+  'live': 'ŽIVÉ PŘENOSY',
+};
 
 const getYouTubeEmbedUrl = (url: string): string | null => {
   const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
@@ -131,9 +138,14 @@ export default function ProjectPage() {
 
           {/* Meta info */}
           <div className="flex flex-wrap items-center gap-3 sm:gap-4 mb-8 sm:mb-10 md:mb-12 pb-6 sm:pb-8 border-b border-zinc-700">
-            <span className="bg-yellow-400 text-black px-3 sm:px-4 py-1 sm:py-2 rounded font-semibold text-xs sm:text-sm uppercase">
-              {project.category}
-            </span>
+            {project.categories?.map((category) => (
+              <span 
+                key={category}
+                className="bg-yellow-400 text-black px-3 sm:px-4 py-1 sm:py-2 rounded font-semibold text-xs sm:text-sm uppercase"
+              >
+                {CATEGORY_NAMES[category] || category}
+              </span>
+            ))}
             <span className="text-zinc-400 text-xs sm:text-sm">
               {new Date(project.created_at).toLocaleDateString('cs-CZ', {
                 year: 'numeric',

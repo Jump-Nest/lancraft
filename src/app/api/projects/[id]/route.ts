@@ -50,7 +50,7 @@ export async function PUT(
   try {
     checkAuth(request);
     const { id } = await params;
-    const { title, description, image, category, thumbnail_image, article_image, preview_text, youtube_url, instagram_url, twitch_url } = await request.json();
+    const { title, description, image, categories, thumbnail_image, article_image, preview_text, youtube_url, instagram_url, twitch_url } = await request.json();
 
     const docRef = doc(db, 'projects', id);
     const docSnap = await getDoc(docRef);
@@ -63,7 +63,7 @@ export async function PUT(
       title,
       description,
       image: image || null,
-      category,
+      categories,
       thumbnail_image: thumbnail_image || null,
       article_image: article_image || null,
       preview_text: preview_text || null,

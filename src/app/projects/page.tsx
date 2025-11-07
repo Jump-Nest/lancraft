@@ -9,12 +9,20 @@ import { useInView } from '@/hooks/useInView';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
+const categories = [
+  { id: 'all', name: 'VŠECHNY' },
+  { id: 'offline', name: 'OFFLINE EVENTY' },
+  { id: 'online', name: 'ONLINE MARKETING' },
+  { id: 'influencer', name: 'INFLUENCER MARKETING' },
+  { id: 'live', name: 'ŽIVÉ PŘENOSY' },
+];
+
 interface Project {
   id: number;
   title: string;
   description: string;
   image: string;
-  category: string;
+  categories: string[];
 }
 
 // Funkce pro extrahování plain textu z HTML
@@ -72,6 +80,7 @@ const ProjectCard = ({ project, index }: { project: Project; index: number }) =>
 };
 
 export default function AllProjectsPage() {
+  const [activeCategory, setActiveCategory] = useState('all');
   const [projects, setProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { ref, inView } = useInView({
@@ -79,7 +88,6 @@ export default function AllProjectsPage() {
     triggerOnce: true,
   });
 
-  // Načíst všechny projekty z API
   useEffect(() => {
     const fetchProjects = async () => {
       try {
@@ -97,6 +105,10 @@ export default function AllProjectsPage() {
 
     fetchProjects();
   }, []);
+
+  const filteredProjects = activeCategory === 'all' 
+    ? projects 
+    : projects.filter(project => project.categories?.includes(activeCategory));
 
   return (
     <div className="min-h-screen bg-black text-white flex flex-col">
@@ -121,12 +133,31 @@ export default function AllProjectsPage() {
             </p>
           </motion.div>
 
+          {/* Category Navigation */}
+          <div className="flex flex-wrap justify-center gap-4 sm:gap-6 md:gap-10 lg:gap-14 mb-10 sm:mb-12 md:mb-16">
+            {categories.map((category) => (
+              <motion.button
+                key={category.id}
+                onClick={() => setActiveCategory(category.id)}
+                className={`font-montserrat font-semibold text-xs sm:text-sm md:text-sm uppercase tracking-wider transition-colors duration-300 pb-2 border-b-2 ${
+                  activeCategory === category.id
+                    ? 'text-yellow-400 border-yellow-400'
+                    : 'text-white border-b-transparent hover:text-yellow-400'
+                }`}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                {category.name}
+              </motion.button>
+            ))}
+          </div>
+
           {/* Projects Grid - 3 columns */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 lg:gap-10 mb-12 sm:mb-14 md:mb-16">
             {isLoading ? (
               <p className="text-white text-center col-span-full">Načítám projekty...</p>
-            ) : projects.length > 0 ? (
-              projects.map((project, index) => (
+            ) : filteredProjects.length > 0 ? (
+              filteredProjects.map((project, index) => (
                 <ProjectCard key={project.id} project={project} index={index} />
               ))
             ) : (

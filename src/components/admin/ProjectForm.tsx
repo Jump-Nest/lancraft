@@ -14,7 +14,7 @@ interface Project {
   thumbnail_image?: string;
   article_image?: string;
   preview_text?: string;
-  category: string;
+  categories: string[];
   youtube_url?: string;
   instagram_url?: string;
   twitch_url?: string;
@@ -42,7 +42,7 @@ export default function ProjectForm({ project, onSuccess, onCancel }: ProjectFor
     thumbnail_image: '',
     article_image: '',
     preview_text: '',
-    category: 'online',
+    categories: [],
     youtube_url: '',
     instagram_url: '',
     twitch_url: '',
@@ -123,6 +123,25 @@ export default function ProjectForm({ project, onSuccess, onCancel }: ProjectFor
     }));
   };
 
+  const handleCategoryToggle = (categoryId: string) => {
+    setFormData((prev) => {
+      const categories = prev.categories || [];
+      const isSelected = categories.includes(categoryId);
+      
+      if (isSelected) {
+        return {
+          ...prev,
+          categories: categories.filter((id) => id !== categoryId),
+        };
+      } else {
+        return {
+          ...prev,
+          categories: [...categories, categoryId],
+        };
+      }
+    });
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
@@ -181,19 +200,24 @@ export default function ProjectForm({ project, onSuccess, onCancel }: ProjectFor
 
       {/* Kategorie */}
       <div>
-        <label className="block text-xs sm:text-sm font-medium text-white mb-2">Kategorie</label>
-        <select
-          name="category"
-          value={formData.category}
-          onChange={handleChange}
-          className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded text-white text-sm focus:outline-none focus:border-yellow-400"
-        >
+        <label className="block text-xs sm:text-sm font-medium text-white mb-3">Kategorie</label>
+        <div className="space-y-2">
           {CATEGORIES.map((cat) => (
-            <option key={cat.id} value={cat.id}>
-              {cat.name}
-            </option>
+            <label
+              key={cat.id}
+              className="flex items-center gap-3 p-3 bg-zinc-800 border border-zinc-700 rounded hover:bg-zinc-750 cursor-pointer transition-colors"
+            >
+              <input
+                type="checkbox"
+                checked={formData.categories?.includes(cat.id) || false}
+                onChange={() => handleCategoryToggle(cat.id)}
+                className="w-4 h-4 text-yellow-400 bg-zinc-700 border-zinc-600 rounded focus:ring-yellow-400 focus:ring-2"
+              />
+              <span className="text-sm text-white">{cat.name}</span>
+            </label>
           ))}
-        </select>
+        </div>
+        <p className="text-xs text-zinc-400 mt-2">Můžete vybrat více kategorií</p>
       </div>
 
       {/* Preview Text */}

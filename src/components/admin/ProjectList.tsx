@@ -13,9 +13,16 @@ interface Project {
   thumbnail_image?: string;
   article_image?: string;
   preview_text?: string;
-  category: string;
+  categories: string[];
   created_at: string;
 }
+
+const CATEGORY_NAMES: Record<string, string> = {
+  'offline': 'OFFLINE EVENTY',
+  'online': 'ONLINE MARKETING',
+  'influencer': 'INFLUENCER MARKETING',
+  'live': 'ŽIVÉ PŘENOSY',
+};
 
 // Funkce pro extrahování plain textu z HTML
 const stripHtml = (html: string): string => {
@@ -96,7 +103,15 @@ export default function ProjectList({ projects, onEdit, onRefresh }: ProjectList
                 )}
               </td>
               <td className="px-2 sm:px-4 py-3 text-white text-xs sm:text-sm truncate">{project.title}</td>
-              <td className="hidden sm:table-cell px-4 py-3 text-zinc-400 text-xs sm:text-sm">{project.category}</td>
+              <td className="hidden sm:table-cell px-4 py-3 text-zinc-400 text-xs sm:text-sm">
+                <div className="flex flex-wrap gap-1">
+                  {project.categories?.map((cat) => (
+                    <span key={cat} className="inline-block bg-zinc-700 px-2 py-0.5 rounded text-xs">
+                      {CATEGORY_NAMES[cat] || cat}
+                    </span>
+                  ))}
+                </div>
+              </td>
               <td className="hidden md:table-cell px-4 py-3 text-zinc-400 text-xs sm:text-sm truncate max-w-xs">{stripHtml(project.description)}</td>
               <td className="px-2 sm:px-4 py-3 text-right space-x-2">
                 <button

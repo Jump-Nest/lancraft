@@ -12,7 +12,7 @@ interface Project {
   title: string;
   description: string;
   image: string;
-  category: string;
+  categories: string[];
   created_at: string;
 }
 

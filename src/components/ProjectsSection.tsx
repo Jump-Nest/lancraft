@@ -22,7 +22,7 @@ interface Project {
   thumbnail_image?: string;
   article_image?: string;
   preview_text?: string;
-  category: string;
+  categories: string[];
 }
 
 // Funkce pro extrahování plain textu z HTML
@@ -45,6 +45,9 @@ const ProjectCard = ({ project, index }: { project: Project; index: number }) =>
     triggerOnce: true,
   });
 
+  const imageUrl = project.thumbnail_image || project.article_image || project.image || null;
+  const isBase64 = imageUrl?.startsWith('data:');
+
   return (
     <Link href={`/projects/${project.id}`}>
       <motion.div
@@ -60,14 +63,29 @@ const ProjectCard = ({ project, index }: { project: Project; index: number }) =>
         
         {/* Inner card container */}
         <div className="relative w-full h-full overflow-hidden rounded-lg transform group-hover:scale-110 transition-transform duration-500">
-          <Image
-            src={project.thumbnail_image || project.image}
-            alt={project.title}
-            fill
-            sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            className="object-cover w-full h-full"
-            style={{ filter: 'blur(1px)' }}
-          />
+          {imageUrl ? (
+            isBase64 ? (
+              <img
+                src={imageUrl}
+                alt={project.title}
+                className="absolute inset-0 w-full h-full object-cover"
+                style={{ filter: 'blur(1px)', height: '97%' }}
+              />
+            ) : (
+              <Image
+                src={imageUrl}
+                alt={project.title}
+                fill
+                sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                className="object-cover w-full h-full"
+                style={{ filter: 'blur(1px)', height: '97%' }}
+              />
+            )
+          ) : (
+            <div className="w-full h-full bg-zinc-800 flex items-center justify-center">
+              <span className="text-zinc-600 text-lg">Bez obrázku</span>
+            </div>
+          )}
 
           {/* Overlay with gradient - darker on hover for better contrast */}
           <div className="absolute inset-0 bg-gradient-to-t from-black from-0% via-black/60 via-30% to-black/40 to-100% 
@@ -105,7 +123,6 @@ const ProjectCard = ({ project, index }: { project: Project; index: number }) =>
 };
 
 export default function ProjectsSection() {
-  const [activeCategory, setActiveCategory] = useState('online');
   const [projects, setProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { ref, inView } = useInView({
@@ -113,14 +130,13 @@ export default function ProjectsSection() {
     triggerOnce: true,
   });
 
-  // Načíst projekty z API
   useEffect(() => {
     const fetchProjects = async () => {
       try {
         const response = await fetch('/api/projects');
         if (response.ok) {
           const data = await response.json();
-          setProjects(data);
+          setProjects(data.slice(0, 6));
         }
       } catch (error) {
         console.error('Chyba při načítání projektů:', error);
@@ -131,10 +147,6 @@ export default function ProjectsSection() {
 
     fetchProjects();
   }, []);
-
-  const filteredProjects = projects.filter(
-    (project) => project.category === activeCategory
-  );
 
   return (
     <section id="projects" className="relative bg-black py-12 sm:py-16 md:py-20 lg:py-24 overflow-hidden">
@@ -173,31 +185,12 @@ export default function ProjectsSection() {
           Naše projekty
         </motion.h2>
 
-        {/* Category Navigation */}
-        <div className="flex flex-wrap justify-center gap-4 sm:gap-6 md:gap-10 lg:gap-14 mb-10 sm:mb-12 md:mb-16">
-          {categories.map((category) => (
-            <motion.button
-              key={category.id}
-              onClick={() => setActiveCategory(category.id)}
-              className={`font-montserrat font-semibold text-xs sm:text-sm md:text-sm uppercase tracking-wider transition-colors duration-300 pb-2 border-b-2 ${
-                activeCategory === category.id
-                  ? 'text-yellow-400 border-yellow-400'
-                  : 'text-white border-b-transparent hover:text-yellow-400'
-              }`}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              {category.name}
-            </motion.button>
-          ))}
-        </div>
-
         {/* Projects Grid - 3 columns */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 lg:gap-10 mb-12 sm:mb-14 md:mb-16">
           {isLoading ? (
             <p className="text-white text-center col-span-full">Načítám projekty...</p>
-          ) : filteredProjects.length > 0 ? (
-            filteredProjects.map((project, index) => (
+          ) : projects.length > 0 ? (
+            projects.map((project, index) => (
               <ProjectCard key={project.id} project={project} index={index} />
             ))
           ) : (

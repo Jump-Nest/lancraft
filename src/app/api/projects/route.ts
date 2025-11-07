@@ -50,9 +50,9 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     console.log('Request body:', JSON.stringify(body, null, 2));
 
-    const { title, description, image, category, thumbnail_image, article_image, preview_text, youtube_url, instagram_url, twitch_url } = body;
+    const { title, description, image, categories, thumbnail_image, article_image, preview_text, youtube_url, instagram_url, twitch_url } = body;
 
-    if (!title || !description || !category) {
+    if (!title || !description || !categories || categories.length === 0) {
       console.log('Validation failed: Missing required fields');
       return NextResponse.json({ error: 'Chybí požadovaná pole' }, { status: 400 });
     }
@@ -72,7 +72,7 @@ export async function POST(request: NextRequest) {
       title,
       description,
       image: image || null,
-      category,
+      categories,
       thumbnail_image: thumbnail_image || null,
       article_image: article_image || null,
       preview_text: preview_text || null,
@@ -91,7 +91,7 @@ export async function POST(request: NextRequest) {
       title,
       description,
       image,
-      category,
+      categories,
       thumbnail_image,
       article_image,
       preview_text,
