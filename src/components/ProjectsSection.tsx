@@ -15,6 +15,12 @@ const categories = [
   { id: 'live', name: 'ŽIVÉ PŘENOSY' },
 ];
 
+const categoryNameMap: Record<string, string> = categories.reduce((acc, c) => {
+  acc[c.id] = c.name;
+  return acc;
+}, {} as Record<string, string>);
+
+
 interface Project {
   id: number;
   title: string;
@@ -49,6 +55,11 @@ const ProjectCard = ({ project, index }: { project: Project; index: number }) =>
   const imageUrl = project.thumbnail_image || project.article_image || project.image || null;
   const isBase64 = imageUrl?.startsWith('data:');
 
+  const primaryCategory = project.categories?.[0];
+  const primaryCategoryName = primaryCategory
+    ? categoryNameMap[primaryCategory] || primaryCategory
+    : null;
+
   return (
     <Link href={`/${slugify(project.title)}`}>
       <motion.div
@@ -72,7 +83,6 @@ const ProjectCard = ({ project, index }: { project: Project; index: number }) =>
                 src={imageUrl}
                 alt={project.title}
                 className="absolute inset-0 w-full h-full object-cover"
-                style={{ filter: 'blur(1px)' }}
               />
             ) : (
               <Image
@@ -81,7 +91,7 @@ const ProjectCard = ({ project, index }: { project: Project; index: number }) =>
                 fill
                 sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 className="object-cover w-full h-full"
-                style={{ filter: 'blur(1px)' }}
+                quality={90}
               />
             )
           ) : (
@@ -91,17 +101,17 @@ const ProjectCard = ({ project, index }: { project: Project; index: number }) =>
           )}
 
           {/* Overlay with gradient - darker on hover for better contrast */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black from-0% via-black/60 via-30% to-black/40 to-100% 
+          <div className="absolute inset-0 bg-gradient-to-t from-black from-0% via-black/60 via-30% to-black/40 to-100%
             group-hover:from-black group-hover:via-black/70 transition-all duration-300" />
 
           {/* Shine effect overlay */}
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/0 to-transparent 
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/0 to-transparent
             group-hover:via-white/10 transition-all duration-500 pointer-events-none" />
 
           {/* Content */}
-          <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-5 md:p-7 text-white transform 
+          <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-5 md:p-7 text-white transform
             group-hover:translate-y-0 transition-transform duration-300">
-            <h3 className="text-lg sm:text-xl md:text-3xl font-montserrat font-bold mb-2 sm:mb-3 
+            <h3 className="text-lg sm:text-xl md:text-3xl font-montserrat font-bold mb-2 sm:mb-3
               group-hover:text-yellow-300 transition-colors duration-300"
               style={{ textShadow: '0 2px 6px rgba(0,0,0,0.7)' }}>{project.title}</h3>
             <p className="text-xs sm:text-sm md:text-base text-white font-montserrat font-light leading-relaxed opacity-90
@@ -111,12 +121,17 @@ const ProjectCard = ({ project, index }: { project: Project; index: number }) =>
             </p>
           </div>
 
-          {/* Icon indicator on hover */}
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 
-            opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          {/* Icon indicator on hover + category */}
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2
+            flex flex-col items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             <svg className="w-12 h-12 text-yellow-400 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 5l7 7-7 7M5 5l7 7-7 7" />
             </svg>
+            {primaryCategoryName && (
+              <span className="inline-flex items-center justify-center border border-yellow-400 text-yellow-300 bg-black/70 rounded-md text-xs sm:text-sm font-montserrat font-semibold uppercase px-3 py-1 text-center leading-snug whitespace-normal">
+                {primaryCategoryName}
+              </span>
+            )}
           </div>
         </div>
       </div>
