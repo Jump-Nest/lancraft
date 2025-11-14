@@ -8,6 +8,7 @@ import { FiArrowLeft } from 'react-icons/fi';
 import { useInView } from '@/hooks/useInView';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { slugify } from '@/lib/slug';
 
 const categories = [
   { id: 'all', name: 'VŠECHNY' },
@@ -46,7 +47,7 @@ const ProjectCard = ({ project, index }: { project: Project; index: number }) =>
   });
 
   return (
-    <Link href={`/projects/${project.id}`}>
+    <Link href={`/${slugify(project.title)}`}>
       <motion.div
         ref={ref}
         initial={{ opacity: 0, y: 50 }}

@@ -5,6 +5,8 @@ import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Link from '@tiptap/extension-link';
 import { VideoExtension, getVideoEmbedUrl } from '@/lib/video-extension';
+import { ImageExtension } from '@/lib/image-extension';
+import ImageUpload from './ImageUpload';
 
 interface TipTapEditorProps {
   value: string;
@@ -17,6 +19,8 @@ export default function TipTapEditor({ value, onChange, placeholder }: TipTapEdi
   const [videoUrl, setVideoUrl] = useState('');
   const [videoSize, setVideoSize] = useState('large');
   const [videoError, setVideoError] = useState('');
+  const [showImageDialog, setShowImageDialog] = useState(false);
+  const [imageAlt, setImageAlt] = useState('');
 
   const editor = useEditor({
     extensions: [
@@ -26,11 +30,12 @@ export default function TipTapEditor({ value, onChange, placeholder }: TipTapEdi
         codeBlock: { HTMLAttributes: { class: 'bg-zinc-900 p-2 rounded font-mono text-sm' } },
         paragraph: { HTMLAttributes: { class: 'mb-2' } },
       }),
-      Link.configure({ 
+      Link.configure({
         openOnClick: false,
         HTMLAttributes: { class: 'text-yellow-400 underline' },
       }),
       VideoExtension,
+      ImageExtension,
     ],
     content: value || '',
     onUpdate: ({ editor }) => {
@@ -46,9 +51,25 @@ export default function TipTapEditor({ value, onChange, placeholder }: TipTapEdi
 
   if (!editor) return null;
 
+  const handleImageInsertFromUpload = (url: string) => {
+    if (!editor) return;
+
+    editor
+      .chain()
+      .focus()
+      .setImage({
+        src: url,
+        alt: imageAlt || undefined,
+      })
+      .run();
+
+    setShowImageDialog(false);
+    setImageAlt('');
+  };
+
   const handleVideoInsert = () => {
     setVideoError('');
-    
+
     if (!videoUrl.trim()) {
       setVideoError('Prosím zadejte URL videa');
       return;
@@ -81,6 +102,10 @@ export default function TipTapEditor({ value, onChange, placeholder }: TipTapEdi
   const toggleCodeBlock = () => editor.chain().focus().toggleCodeBlock().run();
   const toggleBlockquote = () => editor.chain().focus().toggleBlockquote().run();
   const clearFormatting = () => editor.chain().focus().clearNodes().unsetAllMarks().run();
+  const setImageFloat = (value: 'none' | 'left' | 'right') =>
+    editor.chain().focus().updateAttributes('image', { float: value }).run();
+
+
 
   return (
     <>
@@ -100,6 +125,13 @@ export default function TipTapEditor({ value, onChange, placeholder }: TipTapEdi
         height: auto;
         min-height: 600px;
       }
+      .editor-content [data-type="video"][data-size="small"],
+      .editor-content [data-type="video"][data-size="medium"],
+      .editor-content [data-type="video"][data-size="large"] {
+        display: inline-block;
+        vertical-align: top;
+        margin: 1rem 0.5rem;
+      }
       .editor-content [data-type="video"][data-size="small"] {
         width: 100%;
         max-width: 400px;
@@ -114,6 +146,7 @@ export default function TipTapEditor({ value, onChange, placeholder }: TipTapEdi
       }
       .editor-content [data-type="video"][data-size="full"] {
         width: 100%;
+        display: block;
       }
       .editor-content [data-type="video"] iframe {
         position: absolute;
@@ -256,6 +289,49 @@ export default function TipTapEditor({ value, onChange, placeholder }: TipTapEdi
 
         <button
           type="button"
+          onClick={() => setShowImageDialog(true)}
+          className="px-2 sm:px-3 py-1 rounded text-xs sm:text-sm bg-zinc-800 text-white hover:bg-zinc-700 transition flex-shrink-0"
+          title="Vložit obrázek"
+        >
+          <span className="hidden sm:inline">🖼 Obrázek</span>
+          <span className="sm:hidden">🖼</span>
+        </button>
+
+        {editor.isActive('image') && (
+          <div className="flex items-center gap-1">
+            <button
+              type="button"
+              onClick={() => setImageFloat('none')}
+              className="px-2 sm:px-3 py-1 rounded text-xs sm:text-sm bg-zinc-800 text-white hover:bg-zinc-700 transition flex-shrink-0"
+              title="Bez obtékání"
+            >
+              <span className="hidden sm:inline">Bez obtékání</span>
+              <span className="sm:hidden">⊘</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setImageFloat('left')}
+              className="px-2 sm:px-3 py-1 rounded text-xs sm:text-sm bg-zinc-800 text-white hover:bg-zinc-700 transition flex-shrink-0"
+              title="Obrázek vlevo, text vpravo"
+            >
+              <span className="hidden sm:inline">Obrázek vlevo</span>
+              <span className="sm:hidden">⟵</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setImageFloat('right')}
+              className="px-2 sm:px-3 py-1 rounded text-xs sm:text-sm bg-zinc-800 text-white hover:bg-zinc-700 transition flex-shrink-0"
+              title="Obrázek vpravo, text vlevo"
+            >
+              <span className="hidden sm:inline">Obrázek vpravo</span>
+              <span className="sm:hidden">⟶</span>
+            </button>
+          </div>
+        )}
+
+
+        <button
+          type="button"
           onClick={() => setShowVideoDialog(true)}
           className="px-2 sm:px-3 py-1 rounded text-xs sm:text-sm bg-zinc-800 text-white hover:bg-zinc-700 transition flex-shrink-0"
           title="Vložit video"
@@ -278,12 +354,55 @@ export default function TipTapEditor({ value, onChange, placeholder }: TipTapEdi
       {/* Editor */}
       <EditorContent editor={editor} />
 
+      {/* Image Dialog */}
+      {showImageDialog && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-zinc-900 border border-zinc-700 rounded-lg p-6 max-w-md w-full">
+            <h3 className="text-lg font-bold text-white mb-4">Vložit obrázek</h3>
+
+            <div className="mb-4">
+              <label className="block text-sm text-white mb-2">Popis obrázku (ALT)</label>
+              <input
+                type="text"
+                value={imageAlt}
+                onChange={(e) => setImageAlt(e.target.value)}
+                placeholder="Nepovinné – pro přístupnost a SEO"
+                className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded text-white text-sm placeholder-zinc-500 focus:outline-none focus:border-yellow-400"
+              />
+              <p className="text-xs text-zinc-400 mt-2">
+                Popis se uloží jako ALT text. Pokud ho nevyplníte, obrázek se vloží bez něj.
+              </p>
+            </div>
+
+            <div className="mb-4">
+              <ImageUpload onImageUpload={handleImageInsertFromUpload} aspectRatio="16/9" />
+              <p className="text-xs text-zinc-400 mt-2">
+                Po nahrání se obrázek automaticky vloží na pozici kurzoru v článku.
+              </p>
+            </div>
+
+            <div className="flex justify-end gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setShowImageDialog(false);
+                  setImageAlt('');
+                }}
+                className="bg-zinc-700 hover:bg-zinc-600 text-white font-bold py-2 px-4 rounded transition-colors text-sm"
+              >
+                Zavřít
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Video Dialog */}
       {showVideoDialog && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-zinc-900 border border-zinc-700 rounded-lg p-6 max-w-md w-full">
             <h3 className="text-lg font-bold text-white mb-4">Vložit video</h3>
-            
+
             <div className="mb-4">
               <label className="block text-sm text-white mb-2">Video URL</label>
               <input

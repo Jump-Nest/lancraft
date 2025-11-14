@@ -280,6 +280,14 @@ body {
   min-height: 600px;
 }
 
+.project-content [data-type="video"][data-size="small"],
+.project-content [data-type="video"][data-size="medium"],
+.project-content [data-type="video"][data-size="large"] {
+  display: inline-block;
+  vertical-align: top;
+  margin: 1.5rem 0.75rem;
+}
+
 .project-content [data-type="video"][data-size="small"] {
   width: 100%;
   max-width: 400px;
@@ -297,6 +305,7 @@ body {
 
 .project-content [data-type="video"][data-size="full"] {
   width: 100%;
+  display: block;
 }
 
 .project-content [data-type="video"] iframe {

@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useInView } from '@/hooks/useInView';
 import LiquidEther from './LiquidEther';
+import { slugify } from '@/lib/slug';
 
 const categories = [
   { id: 'offline', name: 'OFFLINE EVENTY' },
@@ -49,7 +50,7 @@ const ProjectCard = ({ project, index }: { project: Project; index: number }) =>
   const isBase64 = imageUrl?.startsWith('data:');
 
   return (
-    <Link href={`/projects/${project.id}`}>
+    <Link href={`/${slugify(project.title)}`}>
       <motion.div
         ref={ref}
         initial={{ opacity: 0, y: 50 }}
@@ -58,9 +59,11 @@ const ProjectCard = ({ project, index }: { project: Project; index: number }) =>
         className="group relative overflow-hidden cursor-pointer"
       >
       {/* Outer container with glow effect */}
-      <div className="relative w-full h-[300px] sm:h-[400px] md:h-[500px] lg:h-[580px] rounded-lg overflow-hidden 
-        shadow-lg shadow-transparent group-hover:shadow-yellow-400/30 transition-shadow duration-300">
-        
+      <div
+        className="relative w-full aspect-[2/3] rounded-lg overflow-hidden
+        shadow-lg shadow-transparent group-hover:shadow-yellow-400/30 transition-shadow duration-300"
+      >
+
         {/* Inner card container */}
         <div className="relative w-full h-full overflow-hidden rounded-lg transform group-hover:scale-110 transition-transform duration-500">
           {imageUrl ? (
@@ -69,7 +72,7 @@ const ProjectCard = ({ project, index }: { project: Project; index: number }) =>
                 src={imageUrl}
                 alt={project.title}
                 className="absolute inset-0 w-full h-full object-cover"
-                style={{ filter: 'blur(1px)', height: '97%' }}
+                style={{ filter: 'blur(1px)' }}
               />
             ) : (
               <Image
@@ -78,7 +81,7 @@ const ProjectCard = ({ project, index }: { project: Project; index: number }) =>
                 fill
                 sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 className="object-cover w-full h-full"
-                style={{ filter: 'blur(1px)', height: '97%' }}
+                style={{ filter: 'blur(1px)' }}
               />
             )
           ) : (
