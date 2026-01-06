@@ -231,7 +231,7 @@ export default function ClientsSection() {
 
                       {/* Quote Icon */}
                       <div className="text-yellow-400 text-4xl sm:text-5xl md:text-6xl mb-4 text-center">
-                        "
+                        &ldquo;
                       </div>
 
                       {/* Testimonial Text */}
