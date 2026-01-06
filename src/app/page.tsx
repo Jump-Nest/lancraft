@@ -1,6 +1,6 @@
 import Header from '@/components/Header';
 import HeroSection from '@/components/HeroSection';
-import StatisticsSection from '@/components/StatisticsSection';
+import ServicesSection from '@/components/ServicesSection';
 import ProjectsSection from '@/components/ProjectsSection';
 import RentalSection from '@/components/RentalSection';
 import ClientsSection from '@/components/ClientsSection';
@@ -12,7 +12,7 @@ export default function Home() {
     <main className="bg-black">
       <Header />
       <HeroSection />
-      <StatisticsSection />
+      <ServicesSection />
       <ProjectsSection />
       <RentalSection />
       <ClientsSection />

@@ -46,7 +46,7 @@ export default function StatisticsSection() {
   });
 
   return (
-    <section className="relative bg-[#111111] py-12 sm:py-16 md:py-20">
+    <section id="about" className="relative bg-[#111111] py-12 sm:py-16 md:py-20">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10">
         <div
           ref={ref}

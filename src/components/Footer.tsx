@@ -1,30 +1,15 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { FaFacebook, FaInstagram, FaYoutube } from 'react-icons/fa6';
+import { FaFacebook, FaInstagram, FaLinkedin } from 'react-icons/fa6';
 
 export default function Footer() {
-  const columnOne = [
-    'Pellentesque commodo tortor',
-    'Arcu tincidunt eleifend',
-    'Donec gravida tortor nec magna',
-    'Vivamus nec ultrices dui',
-    'Aenean sagittis massa in urna',
-  ];
-
-  const columnTwo = [
-    'Pellentesque commodo tortor',
-    'Arcu tincidunt eleifend',
-    'Donec gravida tortor nec magna',
-    'Vivamus nec ultrices dui',
-    'Aenean sagittis massa in urna',
-  ];
-
   const socialLinks = [
-    { icon: FaFacebook, href: '#', name: 'Facebook' },
-    { icon: FaInstagram, href: '#', name: 'Instagram' },
-    { icon: FaYoutube, href: '#', name: 'YouTube' },
+    { icon: FaLinkedin, href: 'https://www.linkedin.com/company/lancraft', name: 'LinkedIn' },
+    { icon: FaInstagram, href: 'https://www.instagram.com/lancraftcz/', name: 'Instagram' },
+    { icon: FaFacebook, href: 'https://www.facebook.com/lancraftcz/photos_albums', name: 'Facebook' },
   ];
 
   const currentYear = new Date().getFullYear();
@@ -32,76 +17,34 @@ export default function Footer() {
   return (
     <footer id="footer" className="relative bg-[#111111] py-12 sm:py-16 md:py-20 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-10 relative z-10">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 sm:gap-12 md:gap-16 mb-12 md:mb-16">
-          {/* Left Column */}
+        {/* Top Section */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-12 mb-8 sm:mb-12">
+          {/* Left: Contact Info */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            <h3 className="text-white font-montserrat font-bold text-lg sm:text-xl mb-6 sm:mb-8">
-              Lorem ipsum dolor
+            <h3 className="text-white font-montserrat font-bold text-lg sm:text-xl mb-4">
+              Kontakt
             </h3>
-            <ul className="space-y-3 sm:space-y-4">
-              {columnOne.map((item, index) => (
-                <li key={index}>
-                  <a
-                    href="#"
-                    className="text-gray-400 hover:text-yellow-400 transition-colors font-montserrat text-xs sm:text-sm"
-                  >
-                    {item}
-                  </a>
-                </li>
-              ))}
-            </ul>
+            <a
+              href="mailto:info@lancraft.cz"
+              className="text-gray-400 hover:text-yellow-400 transition-colors font-montserrat text-sm sm:text-base"
+            >
+              info@lancraft.cz
+            </a>
           </motion.div>
 
-          {/* Middle Column */}
+          {/* Right: Social Media */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
             viewport={{ once: true }}
+            className="flex flex-col items-start md:items-end"
           >
-            <h3 className="text-white font-montserrat font-bold text-lg sm:text-xl mb-6 sm:mb-8">
-              Lorem ipsum dolor
-            </h3>
-            <ul className="space-y-3 sm:space-y-4">
-              {columnTwo.map((item, index) => (
-                <li key={index}>
-                  <a
-                    href="#"
-                    className="text-gray-400 hover:text-yellow-400 transition-colors font-montserrat text-xs sm:text-sm"
-                  >
-                    {item}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </motion.div>
-
-          {/* Right Column */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            viewport={{ once: true }}
-            className="flex flex-col items-center"
-          >
-            {/* Logo */}
-            <div className="w-40 sm:w-56 h-20 sm:h-28 mb-6 sm:mb-8 flex items-center justify-center">
-              <Image
-                src="/designs/lclogotranswhite.png"
-                alt="LanCraft"
-                width={220}
-                height={110}
-                className="object-contain"
-                style={{ width: 'auto', height: 'auto' }}
-              />
-            </div>
-
-            {/* Social Icons */}
             <div className="flex gap-6 sm:gap-8">
               {socialLinks.map((social, index) => {
                 const Icon = social.icon;
@@ -109,7 +52,9 @@ export default function Footer() {
                   <motion.a
                     key={index}
                     href={social.href}
-                    className="text-white hover:text-yellow-400 transition-colors text-2xl sm:text-3xl md:text-4xl"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-white hover:text-yellow-400 transition-colors text-2xl sm:text-3xl"
                     whileHover={{ scale: 1.2 }}
                     whileTap={{ scale: 0.95 }}
                     title={social.name}
@@ -123,19 +68,37 @@ export default function Footer() {
         </div>
 
         {/* Divider */}
-        <div className="border-t border-gray-800 my-8 sm:my-10 md:my-12"></div>
+        <div className="border-t border-gray-800 my-8 sm:my-10"></div>
 
-        {/* Copyright */}
+        {/* Bottom Section */}
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
           viewport={{ once: true }}
-          className="text-center"
+          className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center"
         >
-          <p className="text-gray-500 font-montserrat text-xs sm:text-sm">
-            © {currentYear} LANCRAFT. All rights reserved.
-          </p>
+          {/* Left: Company Info */}
+          <div className="text-gray-400 font-montserrat text-xs sm:text-sm">
+            <p>LanCraft s.r.o.</p>
+            <p>Benešova 175, 471 52 Sloup v Čechách</p>
+          </div>
+
+          {/* Right: Legal Links */}
+          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 md:justify-end">
+            <Link
+              href="/ochrana-osobnich-udaju"
+              className="text-gray-400 hover:text-yellow-400 transition-colors font-montserrat text-xs sm:text-sm"
+            >
+              Ochrana osobních údajů
+            </Link>
+            <Link
+              href="/nastaveni-cookies"
+              className="text-gray-400 hover:text-yellow-400 transition-colors font-montserrat text-xs sm:text-sm"
+            >
+              Nastavení cookies
+            </Link>
+          </div>
         </motion.div>
       </div>
     </footer>

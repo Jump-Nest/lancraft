@@ -11,8 +11,9 @@ export default function Header() {
 
   const navItems = [
     { name: 'O NÁS', href: '#about' },
+    { name: 'SLUŽBY', href: '#about' },
     { name: 'NAŠE AKTIVITY', href: '#projects' },
-    { name: 'PRONÁJEM TECHNIKY', href: '#rental' },
+    { name: 'PRONÁJEM', href: '#rental' },
     { name: 'REFERENCE', href: '#clients' },
     { name: 'KONTAKTUJTE NÁS', href: '#contact' },
   ];
@@ -41,7 +42,7 @@ export default function Header() {
               height={70}
               className="w-32 sm:w-40 md:w-48 h-10 sm:h-12 md:h-14 object-contain"
             />
-            <span className="text-yellow-400 font-montserrat font-extrabold text-xs sm:text-sm tracking-widest">AGENCY</span>
+            <span className="text-yellow-400 font-montserrat font-extrabold text-[10px] sm:text-xs tracking-wide">Gaming marketing & eventová agentúra</span>
           </Link>
         </motion.div>
 

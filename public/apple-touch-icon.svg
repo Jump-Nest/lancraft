@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180">
+  <!-- Black Background -->
+  <rect width="180" height="180" fill="#000000" rx="40"/>
+  
+  <!-- Golden Crown -->
+  <g>
+    <!-- Crown base band -->
+    <rect x="35" y="125" width="110" height="16" fill="#FACC15" rx="3"/>
+    
+    <!-- Crown main body -->
+    <path d="M 40 70 L 35 125 L 145 125 L 140 70 L 118 92 L 90 48 L 62 92 Z" fill="#FACC15"/>
+    
+    <!-- Crown highlights -->
+    <path d="M 45 72 L 40 125 L 48 125 L 53 72 Z" fill="#FDE047" opacity="0.6"/>
+    <path d="M 85 55 L 80 125 L 88 125 L 93 55 Z" fill="#FDE047" opacity="0.6"/>
+    <path d="M 125 72 L 120 125 L 128 125 L 133 72 Z" fill="#FDE047" opacity="0.6"/>
+    
+    <!-- Crown jewels on peaks -->
+    <circle cx="40" cy="70" r="9" fill="#FACC15"/>
+    <circle cx="40" cy="70" r="6" fill="#FDE047"/>
+    
+    <circle cx="90" cy="48" r="12" fill="#FACC15"/>
+    <circle cx="90" cy="48" r="9" fill="#FDE047"/>
+    
+    <circle cx="140" cy="70" r="9" fill="#FACC15"/>
+    <circle cx="140" cy="70" r="6" fill="#FDE047"/>
+    
+    <!-- Decorative diamonds on crown body -->
+    <path d="M 62 100 L 66 96 L 62 92 L 58 96 Z" fill="#FDE047"/>
+    <path d="M 90 103 L 94 99 L 90 95 L 86 99 Z" fill="#FDE047"/>
+    <path d="M 118 100 L 122 96 L 118 92 L 114 96 Z" fill="#FDE047"/>
+    
+    <!-- Shadow/depth -->
+    <path d="M 35 125 L 40 70 L 43 70 L 38 125 Z" fill="#000000" opacity="0.2"/>
+    <path d="M 145 125 L 140 70 L 137 70 L 142 125 Z" fill="#000000" opacity="0.2"/>
+  </g>
+</svg>
+
