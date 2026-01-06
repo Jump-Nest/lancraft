@@ -48,7 +48,7 @@ export default function RentalSection() {
       <div
         className="absolute inset-0 z-10 md:hidden"
         style={{
-          background: 'rgba(0,0,0,0.45)'
+          background: 'rgba(0,0,0,0.7)'
         }}
       />
 
@@ -65,30 +65,32 @@ export default function RentalSection() {
         initial={{ opacity: 0, y: 30 }}
         animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
         transition={{ duration: 0.6 }}
-        className="relative z-20 min-h-[500px] md:min-h-[600px] flex items-center justify-end w-full"
+        className="relative z-20 min-h-[500px] md:min-h-[600px] flex items-center justify-center md:justify-end w-full"
       >
         <div className="w-full md:w-1/2 px-6 sm:px-8 md:px-12 py-12 md:py-16">
-          <div className="max-w-2xl text-left">
+          <div className="max-w-2xl text-center md:text-left">
             {/* Title */}
             <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-montserrat font-bold text-white mb-6 sm:mb-8"
-              style={{ textShadow: '0 2px 8px rgba(0,0,0,0.6)' }}>
+              style={{ textShadow: '0 3px 12px rgba(0,0,0,0.9)' }}>
               Pronájem techniky
             </h2>
 
             {/* Description */}
-            <p className="text-base sm:text-lg md:text-xl font-montserrat text-white opacity-95 leading-relaxed mb-8 sm:mb-10 max-w-xl"
-              style={{ textShadow: '0 1px 4px rgba(0,0,0,0.5)' }}>
+            <p className="text-base sm:text-lg md:text-xl font-montserrat text-white leading-relaxed mb-8 sm:mb-10 max-w-xl mx-auto md:mx-0"
+              style={{ textShadow: '0 2px 8px rgba(0,0,0,0.9)' }}>
               Disponujeme modulárními truss konstrukcemi v desítkách metrů, ze kterých rychle postavíme bránu, rámování stánku, závěsy pro bannery/LED/TV, světla i navigační prvky. Každé řešení umíme navrhnout na míru podle účelu a zatížení, dodat jako samostatný pronájem nebo včetně dopravy, montáže a technického dozoru. Klíčová je pro nás bezpečnost: pracujeme s prověřeným vybavením, montáží proškoleným týmem a průběžnými kontrolami/inspekcemi před provozem.
             </p>
 
             {/* CTA Button */}
-            <motion.button
-              className="bg-yellow-400 hover:bg-yellow-300 text-black px-6 sm:px-8 md:px-10 py-3 sm:py-4 font-montserrat font-bold text-xs sm:text-sm md:text-base uppercase tracking-wide transition-all duration-300"
-              whileHover={{ scale: 1.05, translateY: -2 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              Získat cenovou nabídku
-            </motion.button>
+            <div className="flex justify-center md:justify-start">
+              <motion.button
+                className="bg-yellow-400 hover:bg-yellow-300 text-black px-6 sm:px-8 md:px-10 py-3 sm:py-4 font-montserrat font-bold text-xs sm:text-sm md:text-base uppercase tracking-wide transition-all duration-300"
+                whileHover={{ scale: 1.05, translateY: -2 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                Získat cenovou nabídku
+              </motion.button>
+            </div>
           </div>
         </div>
       </motion.div>

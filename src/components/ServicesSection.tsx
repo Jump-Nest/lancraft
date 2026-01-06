@@ -82,9 +82,9 @@ export default function ServicesSection() {
               {/* Gradient overlay on hover */}
               <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/0 to-yellow-400/0 group-hover:from-yellow-400/5 group-hover:to-yellow-400/10 transition-all duration-300" />
 
-              <div className="relative p-6 sm:p-8">
+              <div className="relative p-6 sm:p-8 text-center md:text-left">
                 {/* Icon */}
-                <div className="mb-6">
+                <div className="mb-6 flex justify-center md:justify-start">
                   <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-yellow-400 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                     <service.icon className="text-3xl sm:text-4xl text-black" />
                   </div>
@@ -108,9 +108,9 @@ export default function ServicesSection() {
                 {/* Features List */}
                 <ul className="space-y-3">
                   {service.features.map((feature, featureIndex) => (
-                    <li key={featureIndex} className="flex items-start gap-3">
+                    <li key={featureIndex} className="flex items-start gap-3 justify-center md:justify-start">
                       <span className="text-yellow-400 mt-1 flex-shrink-0">▸</span>
-                      <span className="text-sm text-gray-300 font-montserrat">
+                      <span className="text-sm text-gray-300 font-montserrat text-left">
                         {feature}
                       </span>
                     </li>
