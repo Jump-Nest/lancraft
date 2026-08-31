@@ -65,7 +65,7 @@ export default function ServicesSection() {
             pro svět gamingu
           </h2>
           <p className="text-base sm:text-lg md:text-xl text-gray-400 font-montserrat max-w-3xl mx-auto">
-            Herní marketing, influencer kampaně, eventy, ligy a turnaje od návrhu po&nbsp;realizaci.
+            Herní marketing, influencer kampaně, eventy, ligy a turnaje od&nbsp;návrhu&nbsp;po&nbsp;realizaci.
           </p>
         </motion.div>
 
