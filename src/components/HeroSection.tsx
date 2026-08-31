@@ -32,7 +32,7 @@ export default function HeroSection() {
           {/* Main Prominent Headline */}
           <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-montserrat font-extrabold mb-6 sm:mb-8 leading-tight"
             style={{ textShadow: '0 3px 10px rgba(0,0,0,0.7)' }}>
-            <span className="text-white">Herní marketing, influenceri a eventy. </span>
+            <span className="text-white">Herní marketing, influenceři a eventy. </span>
             <span className="text-yellow-400">Kompletně </span>
             <span className="text-white">vše pod jednou střechou.</span>
           </h1>
