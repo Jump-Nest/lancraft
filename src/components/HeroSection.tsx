@@ -40,7 +40,7 @@ export default function HeroSection() {
           {/* Description */}
           <p className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-300 font-montserrat mb-6 sm:mb-8 leading-relaxed max-w-4xl mx-auto"
             style={{ textShadow: '0 2px 6px rgba(0,0,0,0.6)' }}>
-            Pomáháme značkám oslovit gaming komunitu. Vymyslíme koncept, zapojíme influencery, připravíme event nebo turnaj a postaráme se o kompletní realizaci.
+            Pomáháme značkám oslovit herní komunitu. Vymyslíme koncept, zapojíme influencery, připravíme event nebo turnaj a postaráme se o kompletní realizaci.
           </p>
 
           {/* CTA Button */}
