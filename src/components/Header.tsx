@@ -42,7 +42,7 @@ export default function Header() {
               height={70}
               className="w-32 sm:w-40 md:w-48 h-10 sm:h-12 md:h-14 object-contain"
             />
-            <span className="text-yellow-400 font-montserrat font-extrabold text-[10px] sm:text-xs tracking-wide">Gaming marketing & eventová agentúra</span>
+            <span className="text-yellow-400 font-montserrat font-extrabold text-[10px] sm:text-xs tracking-wide">Gaming marketing & eventová agentura</span>
           </Link>
         </motion.div>
 
