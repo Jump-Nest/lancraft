@@ -170,6 +170,7 @@ export default function ProjectsSection() {
     <section id="projects" className="relative bg-black py-12 sm:py-16 md:py-20 lg:py-24 overflow-hidden">
       {/* Liquid Ether Background Animation */}
       <div className="absolute inset-0 z-0 pointer-events-none -top-24 -bottom-24 hidden md:block">
+        {/*
         <LiquidEther
           colors={['#FACC15', '#FBD34D', '#FBBF24']}
           mouseForce={20}
@@ -188,6 +189,7 @@ export default function ProjectsSection() {
           autoRampDuration={0.6}
         />
       </div>
+      */
 
       {/* Content */}
       <div className="relative z-10 pointer-events-none">
