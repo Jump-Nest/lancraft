@@ -34,13 +34,13 @@ export default function HeroSection() {
             style={{ textShadow: '0 3px 10px rgba(0,0,0,0.7)' }}>
             <span className="text-white">Herní marketing, influenceři a eventy. </span>
             <span className="text-yellow-400">Kompletně </span>
-            <span className="text-white">vše pod jednou střechou.</span>
+            <span className="text-white">vše pod&nbsp;jednou střechou.</span>
           </h1>
 
           {/* Description */}
           <p className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-300 font-montserrat mb-6 sm:mb-8 leading-relaxed max-w-4xl mx-auto"
             style={{ textShadow: '0 2px 6px rgba(0,0,0,0.6)' }}>
-            Nabízíme široké spektrum možností, díky čemuž dokážeme pro klienty vytvořit aktivitu na míru. Naším cílem je dosáhnout maximální spokojenosti klientů, proto se snažíme o individuální přístup a kvalitní služby.
+            Nabízíme široké spektrum možností, díky kterým dokážeme pro klienty vytvořit aktivitu na míru. Vždy se snažíme o individuální přístup a kvalitní služby s cílem dosáhnout maximální spokojenosti našich klientů.
           </p>
 
           {/* CTA Button */}
