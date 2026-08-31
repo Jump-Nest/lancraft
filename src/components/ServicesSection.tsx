@@ -61,7 +61,7 @@ export default function ServicesSection() {
           className="text-center mb-12 sm:mb-16 md:mb-20"
         >
           <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-montserrat font-bold text-white mb-4 sm:mb-6">
-            <span className="text-yellow-400">Komplexní služby</span>
+            <span className="text-yellow-400">Komplexní služby </span>
             pro svět gamingu
           </h2>
           <p className="text-base sm:text-lg md:text-xl text-gray-400 font-montserrat max-w-3xl mx-auto">
