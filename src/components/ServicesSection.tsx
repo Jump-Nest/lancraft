@@ -9,12 +9,12 @@ const services = [
     icon: FaCalendarAlt,
     title: 'Eventy',
     subtitle: 'Eventy, které si návštěvníci zapamatují',
-    description: 'Vytváříme herní eventy od mobilních brandovaných zón až po turnaje a rozsáhlé aktivace. Zajistíme koncept, produkci, technické řešení, instalaci, obsluhu i samotný průběh akce.',
+    description: 'Vytváříme herní eventy od mobilních brandovaných herních zón až po turnaje a rozsáhlé aktivace. Zajistíme koncept, produkci, technické řešení, instalaci i obsluhu na místě.',
     features: [
-      'Mobilní brandované gaming zóny',
-      'Zábavný program s moderátorem',
-      'Kompletní technické zajištění',
-      'Kreativní koncept a produkce',
+      'Mobilní brandované herní zóny',
+      'Doprovodný program a moderování',
+      'Produkční a technické zajištění',
+      'Kreativní koncept na míru',
     ],
   },
   {
