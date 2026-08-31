@@ -8,8 +8,8 @@ const services = [
   {
     icon: FaCalendarAlt,
     title: 'Eventy',
-    subtitle: 'Eventové aktivity, které lidé zapamatují',
-    description: 'Vytváříme nezapomenutelné gaming eventy od mobilních brandovaných gaming zón až po kompletní turnaje. Nabízíme kreativní koncept, produkci, montáž & demontáž, obsluhu, techniku a kompletní servis.',
+    subtitle: 'Eventy, které si návštěvníci zapamatují',
+    description: 'Vytváříme herní eventy od mobilních brandovaných zón až po turnaje a rozsáhlé aktivace. Zajistíme koncept, produkci, technické řešení, instalaci, obsluhu i samotný průběh akce.',
     features: [
       'Mobilní brandované gaming zóny',
       'Zábavný program s moderátorem',
