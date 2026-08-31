@@ -20,13 +20,13 @@ const services = [
   {
     icon: FaUsers,
     title: 'Influencer marketing',
-    subtitle: 'Propojíme vaši značku s influencery a gaming komunitou',
-    description: 'Máme síť zavedených créatorů na platformách Twitch a YouTube. Vytváříme autentické kampaně s integrací do streamů a videí, brandované sponzorské aktivity a zapojení na eventy.',
+    subtitle: 'Propojíme vaši značku s relevantními influencery a jejich publikem',
+    description: 'Spolupracujeme s influencery napříč sociálními sítěmi a obsahovými platformami. Připravujeme kampaně na míru, integrace do obsahu, brandované spolupráce i zapojení influencerů do eventů.',
     features: [
-      'Síť gaming influencerů',
+      'Výběr vhodných influencerů',
       'Integrace do streamů a videí',
       'Brandované kampaně',
-      'Zapojení na eventy',
+      'Zapojení influencerů do eventů',
     ],
   },
   {
