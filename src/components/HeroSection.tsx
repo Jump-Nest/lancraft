@@ -40,7 +40,7 @@ export default function HeroSection() {
           {/* Description */}
           <p className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-300 font-montserrat mb-6 sm:mb-8 leading-relaxed max-w-4xl mx-auto"
             style={{ textShadow: '0 2px 6px rgba(0,0,0,0.6)' }}>
-            Nabízíme široké spektrum aktivací, díky kterým vždy dokážeme pro naše klienty vytvořit zapojení na míru. Vždy se snažíme o individuální přístup a kvalitní služby s cílem dosáhnout maximální spokojenosti našich klientů.
+            Pomáháme značkám oslovit gaming komunitu. Vymyslíme koncept, zapojíme influencery, připravíme event nebo turnaj a postaráme se o kompletní realizaci.
           </p>
 
           {/* CTA Button */}
